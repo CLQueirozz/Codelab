@@ -3,20 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Buscador de Jogos</title>
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
+    
     <div class="box">
         <h1 class="title">🎮BUSCADOR DE JOGOS</h1>
         <h2>
             Nome do jogo:
             <input id="nome" type="text">
-            <button>
+            <button id="busca">
                 Buscar
             </button>
         </h2>
-        
     </div>
 </body>
+
+
+<script> 
+
+const button = document.getElementById("busca");
+
+
+button.onclick= async function buscar(){
+
+const expression = document.getElementById("nome").value;
+const response= await fetch(`https://api.rawg.io/api/games?key=1175c03391d84eaf9b022713f3c5e618&search=${expression}`)
+
+const dados= await response.json();
+console.log (dados);
+}
+</script>
+
+
 </html>
