@@ -24,3 +24,12 @@ h2{
     margin-top: 30px;
     margin-inline: 200px;
 }
+
+#resultado{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 50px;
+}
+
