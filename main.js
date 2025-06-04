@@ -1,9 +1,23 @@
 
 const button = document.getElementById("busca");
+let globalGameData= [];
 let dados;
-let nome;
-let plataforma;
-let id;
+let i=0;
+let j=0;
+
+function mostrar(){
+    globalGameData.forEach(game=>{
+        console.log(game.nome);
+        console.log(game.id);
+        console.log(game.lancamento);
+        console.log(game.avaliacao);
+        console.log(game.imagem);
+
+        game.plataformas.forEach(plat=>{
+            console.log(plat);
+        });
+    })
+}
 
 button.onclick= async function buscar(){
 
@@ -12,22 +26,29 @@ const response= await fetch(`https://api.rawg.io/api/games?key=1175c03391d84eaf9
 
 dados= await response.json();
 
-    dados.results.forEach(result=>{
-        nome=result.name;
-        console.log (nome);
+    dados.results.forEach((result, i)=>{
 
-        id= result.id;
-        console.log(id);
+        const localGameData={
+            nome:result.name,
+            id: result.id,
+            lancamento:result.released,
+            avaliacao: result.rating,
+            imagem: result.background_image,
+            plataformas: [],
+            posicao: i}
+        
 
-        result.platforms.forEach((item)=>{
-            if(!item.platform)
-                console.log("no games found");
-            plataforma= item.platform.name;
-            console.log(plataforma);
+        result.platforms.forEach((item, j)=>{
+            if(item.platform)
+            localGameData.plataformas.push(item.platform.name); });
 
-});
-    console.log("---");
+    globalGameData.push(localGameData);
+    mostrar();
+
 });
 
 }
+
+
+
 
