@@ -1,5 +1,3 @@
-
-const button = document.getElementById("busca");
 let globalGameData= [];
 let dados;
 let i=0;
@@ -19,7 +17,7 @@ function mostrar(){
     })
 }
 
-button.onclick= async function buscar(){
+async function buscar(){
 
 const expression = document.getElementById("nome").value;
 const response= await fetch(`https://api.rawg.io/api/games?key=1175c03391d84eaf9b022713f3c5e618&search=${expression}`)
@@ -49,6 +47,16 @@ dados= await response.json();
 
 }
 
+const enter= document.getElementById("nome");
+const button = document.getElementById("busca");
 
+enter.addEventListener('keydown', function(event) {
+    if (event.key==='Enter'){
+        buscar();
+    }
+}
+)
+
+button.addEventListener('click', buscar);
 
 
