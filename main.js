@@ -50,11 +50,7 @@ function mostrar() {
         resultado.appendChild(card);
 
     })
-
-
 }
-
-
 button.onclick= async function buscar(){
 
 const expression = document.getElementById("nome").value;
