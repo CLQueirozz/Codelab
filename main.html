@@ -19,26 +19,15 @@
             </button>
         </h2>
     </div>
+
     <div id="resultado">
-            
+        
     </div>
+
+    <script src="main.js">
+        
+    </script>
+
 </body>
-
-
-<script> 
-
-const button = document.getElementById("busca");
-
-
-button.onclick= async function buscar(){
-
-const expression = document.getElementById("nome").value;
-const response= await fetch(`https://api.rawg.io/api/games?key=1175c03391d84eaf9b022713f3c5e618&search=${expression}`)
-
-const dados= await response.json();
-console.log (dados);
-}
-</script>
-
 
 </html>
