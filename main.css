@@ -43,8 +43,9 @@ h2{
     align-content: center;
     align-items: center;
     margin: 0 auto;
-    margin-top: 5%;
-    border-radius: 50%;
+    margin-top: 10px;
+    margin-block-end: 5%;
+    border-radius: 0%;
 }
 
 #prev{
