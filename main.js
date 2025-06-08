@@ -1,14 +1,15 @@
 //algumas variaveis globais MUITO importantes
     let globalGameData= [];
     let globalPageNumero=1;
+    let paginacaoCriada=false;
 
 //cria cards para os valores encontrados
     function mostrar() {
         const resultado= document.getElementById("resultado");
         resultado.innerHTML=""; //limpa os resultados anteriores quando fazemos uma nova busca
 
-        globalGameData.forEach(game =>{
-
+        globalGameData.forEach(game =>{ 
+            
             const card= document.createElement("div"); //criando o card onde cada jogo será exibido
             card.classList.add("jogo"); //criando uma classe para poder alterar a card pelo css através do .jogo
 
@@ -30,10 +31,10 @@
             nome.classList.add("titulo-jogo");
             setad.appendChild(nome); //lado direito do card
 
-                const lancamento= document.createElement("p");
-                lancamento.textContent= `Lançamento: ${game.lancamento}`;
-                lancamento.classList.add("info-jogo");
-                setad.appendChild(lancamento); //lado direito do card
+            const lancamento= document.createElement("p");
+            lancamento.textContent= `Lançamento: ${game.lancamento}`;
+            lancamento.classList.add("info-jogo");
+            setad.appendChild(lancamento); //lado direito do card
 
             const avaliacao=document.createElement("p");
             avaliacao.textContent=`Avaliação: ${game.avaliacao} ⭐`;
@@ -47,6 +48,51 @@
 
             resultado.appendChild(card); //card agora está dentro da div resultado
 
+            if(!paginacaoCriada){//somente a primeira vez que for pesquisada vai entrar nisso e exibir junto com os cards os botões
+                const paginacao=document.createElement("div");//fazendo referência ao div com id page no html
+                paginacao.id="page";
+
+                const botaoe=document.createElement("button");
+                botaoe.id="prev";
+                botaoe.textContent="⬅️";
+
+                const botaod=document.createElement("button");
+                botaod.id="next";
+                botaod.textContent="➡️";
+
+                const texto=document.createElement("div");
+                texto.id="texto";
+                
+                const n=document.createElement("p");
+                texto.appendChild(n);
+                
+                const num=document.createElement("p");
+                num.textContent=globalPageNumero;
+                num.id="num";
+                texto.appendChild(num);
+
+                paginacao.appendChild(botaoe);//appendChild na ordem que queremos <- [texto] ->
+                paginacao.appendChild(texto);
+                paginacao.appendChild(botaod);
+
+                document.body.appendChild(paginacao);//aparecer no fim da página
+
+                botaoe.addEventListener("click",()=> {
+                    if(globalPageNumero>1){
+                        globalPageNumero--;
+                    }
+                    buscar();
+                    updatePag();
+                })
+
+                botaod.addEventListener("click",()=> {
+                    globalPageNumero++;
+                    buscar();
+                    updatePag();
+                })
+
+                paginacaoCriada=true;
+            }
     })
 }
 
@@ -61,28 +107,6 @@
         }})
 
     button.addEventListener('click', buscar);
-    
-//paginação
-
-    //estabele qual é o número da pagina que estamos pesquisando na API
-        function setupPag(){
-            const next=document.getElementById('next');
-            const prev=document.getElementById('prev');
-
-            next.onclick= function(){
-                globalPageNumero++;
-                buscar();
-                updatePag();}
-
-            prev.onclick= function(){
-                if (globalPageNumero>1){
-                    globalPageNumero--;
-                    buscar();
-                    updatePag();}}
-    }
-
-    //dispara a função setupPag assim q a pagina carregar, pq sem ela o link não é gerado, e a função só é chamada quando todo o HTML for carregado após o evento DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', setupPag);
 
     //muda no html a contagem da pagina para que o usuario veja em qual pagina ele está
         function updatePag(){
