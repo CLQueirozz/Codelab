@@ -106,22 +106,16 @@
 
     enter.addEventListener('keydown', function(event) {
         if (event.key==='Enter'){
-            globalPageNumero=1; //atualiza o valor da página a cada nova busca
             buscar();
             pag();
         }})
 
-    button.addEventListener('click',()=> {
-        globalPageNumero=1; //atualiza o valor da página a cada nova busca
-        buscar();
-    });
+    button.addEventListener('click', buscar);
 
     //muda no html a contagem da pagina para que o usuario veja em qual pagina ele está
         function updatePag(){
             const valor=document.getElementById('num');
-            if(valor){
-                valor.textContent=globalPageNumero;
-            }
+            valor.textContent=globalPageNumero;
     }
 
     //retorna o numero da pagina, util para ser lido depois pela função link e pela função buscar
@@ -148,12 +142,7 @@
 
         //quantidade total de resultados
         const qtdTotalresul=dados.count;
-
-        //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
-        updatePag();
-        //20 jogos por página, logo a quantidade total de páginas a serem exibidas por pesquisa é a divisão arredondada para cima
         qtdTotalpag=Math.ceil(qtdTotalresul/20);
-
 
         //limpa o q estava antes na variavel global
         globalGameData=[]; 
