@@ -2,6 +2,8 @@
     let globalGameData= [];
     let globalPageNumero=1;
     let paginacaoCriada=false;
+    let qtdTotalpag=1;
+
 
 //cria cards para os valores encontrados
     function mostrar() {
@@ -86,7 +88,9 @@
                 })
 
                 botaod.addEventListener("click",()=> {
-                    globalPageNumero++;
+                    if(globalPageNumero<qtdTotalpag){
+                        globalPageNumero++;
+                    }
                     buscar();
                     updatePag();
                 })
@@ -135,6 +139,10 @@
         //vai na API
             const response= await fetch(link());
             const dados= await response.json();
+
+        //quantidade total de resultados
+        const qtdTotalresul=dados.count;
+        qtdTotalpag=Math.ceil(qtdTotalresul/20);
 
         //limpa o q estava antes na variavel global
         globalGameData=[]; 
