@@ -112,3 +112,7 @@ h2{
 #page{
     width: 10%;
 }
+
+#carregando{
+    justify-content: center;
+}

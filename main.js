@@ -3,6 +3,7 @@
     let globalPageNumero=1;
     let paginacaoCriada=false;
     let qtdTotalpag=1;
+    const carregando= document.getElementById("carregando");
 
 
 //cria cards para os valores encontrados
@@ -51,7 +52,14 @@
             resultado.appendChild(card); //card agora está dentro da div resultado
 
             if(!paginacaoCriada){//somente a primeira vez que for pesquisada vai entrar nisso e exibir junto com os cards os botões
-                const paginacao=document.createElement("div");//fazendo referência ao div com id page no html
+                cardPag;
+            }
+    })
+}
+
+//Cria o card de paginação
+    function cardPag(){
+        const paginacao=document.createElement("div");//fazendo referência ao div com id page no html
                 paginacao.id="page";
 
                 const botaoe=document.createElement("button");
@@ -96,9 +104,7 @@
                 })
 
                 paginacaoCriada=true;
-            }
-    })
-}
+    }
 
 //põe os event listeners do botão e do enter para pesquisar
     const enter= document.getElementById("nome");
@@ -142,10 +148,16 @@
 //busca na api 
     async function buscar(){
 
+        carregando.textContent="Carregando..."
+
         //vai na API
             const response= await fetch(link());
             const dados= await response.json();
 
+            if(dados){
+                carregando.textContent=""}
+
+        
         //quantidade total de resultados
         const qtdTotalresul=dados.count;
 
@@ -181,7 +193,6 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
 
     }
-
 
 //teste para ver se a api tá pegando o q a gente quer
     function teste(){
