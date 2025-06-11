@@ -544,7 +544,7 @@
             botaoMultiPlayer.id="MultiPlayer";
             botaoMultiPlayer.textContent="MultiPlayer";
 
-        //abre e fecha o menu de opçoes de gênero
+        //abre e fecha o menu de opçoes de tag
             botaoTag.addEventListener('click',()=> {
                 tagsCriadas=!tagsCriadas;
 
@@ -567,11 +567,11 @@
                 }
             });
 
-        //variaveis de controle de qual gênero está sendo ativado
+        //variaveis de controle de qual tag está sendo ativado
             let incluirSinglePlayer=false;
             let incluirMultiPlayer=false;
             
-        //ativa os gêneros
+        //ativa as tags
             botaoSinglePlayer.addEventListener('click',()=>{
                 incluirSinglePlayer=!incluirSinglePlayer;
                 if(incluirSinglePlayer){
@@ -590,7 +590,7 @@
         let tags; //string que vai ser inserida na url de pesquisa
         let j; //controle de como a string vai ser formatada
 
-        //essa função constroi a string "generos" que vai ser inserida na url a prtir de quais filtros foram ativados ou não
+        //essa função constroi a string "tags" que vai ser inserida na url a prtir de quais filtros foram ativados ou não
             function lêTags() {
                 tags="";
                 j=0;
