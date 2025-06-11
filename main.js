@@ -52,7 +52,7 @@
             resultado.appendChild(card); //card agora está dentro da div resultado
 
             if(!paginacaoCriada){//somente a primeira vez que for pesquisada vai entrar nisso e exibir junto com os cards os botões
-                cardPag;
+                cardPag();
             }
     })
 }
