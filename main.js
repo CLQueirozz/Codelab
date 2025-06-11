@@ -141,7 +141,7 @@
         const search = document.getElementById("nome").value;
         const page = linkPag();
         const key= "1175c03391d84eaf9b022713f3c5e618";
-        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${lêGeneros()}`
+        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${lêGeneros()}${lêTags()}`
         
         console.log(url);
         return url;
@@ -528,6 +528,91 @@
 
                 return generos; 
             }     
+
+    //filtro de tags
+        let tagsCriadas=false;
+
+        const lugarDasTags=document.createElement("div");
+        lugarDasTags.id="lugarTags";
+
+        //cria os botões de cada tipo de tag
+            const botaoSinglePlayer=document.createElement("button");
+            botaoSinglePlayer.id="SinglePlayer";
+            botaoSinglePlayer.textContent="SinglePlayer";
+
+            const botaoMultiPlayer=document.createElement("button");
+            botaoMultiPlayer.id="MultiPlayer";
+            botaoMultiPlayer.textContent="MultiPlayer";
+
+        //abre e fecha o menu de opçoes de gênero
+            botaoTag.addEventListener('click',()=> {
+                tagsCriadas=!tagsCriadas;
+
+                if (tagsCriadas){
+                    botaoTag.textContent=`Tags <`
+                    botaoTagDiv.style.width="90%"
+                    lugarDasTags.appendChild(botaoSinglePlayer);
+                    lugarDasTags.appendChild(botaoMultiPlayer);
+                
+                    botaoTagDiv.appendChild(lugarDasTags); 
+                }
+
+                if (!tagsCriadas){
+                    botaoTag.textContent=`Tags >`
+                    botaoTagDiv.style.width="fit-content"
+                    lugarDasTags.removeChild(botaoSinglePlayer);
+                    lugarDasTags.removeChild(botaoMultiPlayer);
+
+                    botaoTagDiv.removeChild(lugarDasTags); 
+                }
+            });
+
+        //variaveis de controle de qual gênero está sendo ativado
+            let incluirSinglePlayer=false;
+            let incluirMultiPlayer=false;
+            
+        //ativa os gêneros
+            botaoSinglePlayer.addEventListener('click',()=>{
+                incluirSinglePlayer=!incluirSinglePlayer;
+                if(incluirSinglePlayer){
+                    botaoSinglePlayer.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                     botaoSinglePlayer.style.backgroundColor="rgb(219, 222, 227)"; }})
+
+           botaoMultiPlayer.addEventListener('click',()=>{
+                incluirMultiPlayer=!incluirMultiPlayer;
+                if(incluirMultiPlayer){
+                    botaoMultiPlayer.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                     botaoMultiPlayer.style.backgroundColor="rgb(219, 222, 227)"; }})
+        
+            
+        let tags; //string que vai ser inserida na url de pesquisa
+        let j; //controle de como a string vai ser formatada
+
+        //essa função constroi a string "generos" que vai ser inserida na url a prtir de quais filtros foram ativados ou não
+            function lêTags() {
+                tags="";
+                j=0;
+
+                if (incluirSinglePlayer){
+                    if (j==0)
+                        tags= tags + "&tags=singleplayer";
+                    else
+                        tags= tags + ",singleplayer";
+                    j++;
+                }
+
+                if (incluirMultiPlayer){
+                    if (j==0)
+                        tags= tags + "&tags=multiplayer";
+                    else
+                        tags= tags + ",multiplayer";
+                    j++;
+                }
+
+                return tags; 
+            }
 
     //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
         botaoAplicar.addEventListener('click', buscar);
