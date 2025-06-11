@@ -183,9 +183,12 @@
                     plataformas: []}
         
         
-                result.platforms.forEach((item)=>{
-                    if(item.platform)
-                            localGameData.plataformas.push(item.platform.name); });
+                if(result.platforms && result.platforms.length > 0) {
+                    result.platforms.forEach((item)=>{
+                        if(item.platform)
+                            localGameData.plataformas.push(item.platform.name); 
+                        });
+                }
 
     //pôe os atributos encontrados na função busca dentro da variavel global que vai ser lida depois
             globalGameData.push(localGameData);
@@ -213,12 +216,17 @@
     })}
 
 //filtro
+
+    //variáveis já presentes no HTML
      const larguraFiltro=document.getElementById("filtragem");
          const displayFiltros=document.getElementById("botãoFiltro");
          const espaçoFiltro=document.getElementById("lugarDosFiltros");
 
-     let filtrosCriados=false;
+    //variavel que olha se a barra filtros está aberta ou não, no caso, ela começa fechada
+        let filtrosCriados=false;
 
+    //cria os 4 botões presentes dentro do filtro: gêneros, tags, disponivel em, aplicar
+    //cria tbm algumas divs por motivos de css
          const botaoGeneroDiv=document.createElement("div");
          botaoGeneroDiv.id="generoDiv";
          const botaoGenero=document.createElement("button");
@@ -247,268 +255,279 @@
          botaoAplicar.textContent="Aplicar";
          botaoAplicarDiv.appendChild(botaoAplicar);
         
-     displayFiltros.addEventListener('click',()=> {
-         filtrosCriados=!filtrosCriados;
+    //event listener que verifica se a pessoa clicou no botão do filtro
+    //se clicou um número impar de vezes, o menu vai abrir e mostrar as opções de filtro
+    //se clicar um número par de vezes, o menu vai ser fechado e ocultar as opções de filtro
+        displayFiltros.addEventListener('click',()=> {
+            filtrosCriados=!filtrosCriados;
 
-         if (filtrosCriados){
-            displayFiltros.textContent=`Filtros <`
-            espaçoFiltro.style.margin="10px";
-            espaçoFiltro.appendChild(botaoGeneroDiv);
-            espaçoFiltro.appendChild(botaoTagDiv);
-            espaçoFiltro.appendChild(botaoPlataformaDiv);
-            espaçoFiltro.appendChild(botaoAplicarDiv);
-        }
+            if (filtrosCriados){
+                displayFiltros.textContent=`Filtros <`
+                espaçoFiltro.style.margin="10px";
+                espaçoFiltro.appendChild(botaoGeneroDiv);
+                espaçoFiltro.appendChild(botaoTagDiv);
+                espaçoFiltro.appendChild(botaoPlataformaDiv);
+                espaçoFiltro.appendChild(botaoAplicarDiv);
+            }
 
-        if (!filtrosCriados){
-            displayFiltros.textContent=`Filtros >`
-            espaçoFiltro.style.margin="0px";
-            espaçoFiltro.removeChild(botaoGeneroDiv);
-            espaçoFiltro.removeChild(botaoTagDiv);
-            espaçoFiltro.removeChild(botaoPlataformaDiv);
-            espaçoFiltro.removeChild(botaoAplicarDiv);
-        }
-    });
+            if (!filtrosCriados){
+                displayFiltros.textContent=`Filtros >`
+                espaçoFiltro.style.margin="0px";
+                espaçoFiltro.removeChild(botaoGeneroDiv);
+                espaçoFiltro.removeChild(botaoTagDiv);
+                espaçoFiltro.removeChild(botaoPlataformaDiv);
+                espaçoFiltro.removeChild(botaoAplicarDiv);
+            }
+        });
 
-    let generosCriados=false;
+    //filtro de gênero 
+        let generosCriados=false;
 
         const lugarDosGêneros=document.createElement("div");
         lugarDosGêneros.id="lugarGêneros";
 
-        const botaoAção=document.createElement("button");
-        botaoAção.id="ação";
-        botaoAção.textContent="Ação";
+        //cria os botões de cada tipo de gênero
+            const botaoAção=document.createElement("button");
+            botaoAção.id="ação";
+            botaoAção.textContent="Ação";
 
-        const botaoIndie=document.createElement("button");
-        botaoIndie.id="indie";
-        botaoIndie.textContent="Indie";
+            const botaoIndie=document.createElement("button");
+            botaoIndie.id="indie";
+            botaoIndie.textContent="Indie";
 
-        const botaoPuzzle=document.createElement("button");
-        botaoPuzzle.id="puzzle";
-        botaoPuzzle.textContent="Puzzle";
+            const botaoPuzzle=document.createElement("button");
+            botaoPuzzle.id="puzzle";
+            botaoPuzzle.textContent="Puzzle";
 
-        const botaoAdventure=document.createElement("button");
-        botaoAdventure.id="adventure";
-        botaoAdventure.textContent="Aventura";
+            const botaoAdventure=document.createElement("button");
+            botaoAdventure.id="adventure";
+            botaoAdventure.textContent="Aventura";
 
-        const botaoRPG=document.createElement("button");
-        botaoRPG.id="RPG";
-        botaoRPG.textContent="RPG";
+            const botaoRPG=document.createElement("button");
+            botaoRPG.id="RPG";
+            botaoRPG.textContent="RPG";
 
-        const botaoStrategy=document.createElement("button");
-        botaoStrategy.id="strategy";
-        botaoStrategy.textContent="Estratégia";
+            const botaoStrategy=document.createElement("button");
+            botaoStrategy.id="strategy";
+            botaoStrategy.textContent="Estratégia";
 
-        const botaoShooter=document.createElement("button");
-        botaoShooter.id="shooter";
-        botaoShooter.textContent="Shooter";
+            const botaoShooter=document.createElement("button");
+            botaoShooter.id="shooter";
+            botaoShooter.textContent="Shooter";
 
-        const botaoSports=document.createElement("button");
-        botaoSports.id="sports";
-        botaoSports.textContent="Esportes";
+            const botaoSports=document.createElement("button");
+            botaoSports.id="sports";
+            botaoSports.textContent="Esportes";
 
-        const botaoRacing=document.createElement("button");
-        botaoRacing.id="racing";
-        botaoRacing.textContent="Corrida";
+            const botaoRacing=document.createElement("button");
+            botaoRacing.id="racing";
+            botaoRacing.textContent="Corrida";
 
-    botaoGenero.addEventListener('click',()=> {
-        generosCriados=!generosCriados;
+        //abre e fecha o menu de opçoes de gênero
+            botaoGenero.addEventListener('click',()=> {
+                generosCriados=!generosCriados;
 
-         if (generosCriados){
-            botaoGenero.textContent=`Gêneros <`
-            botaoGeneroDiv.style.width="90%"
-            lugarDosGêneros.appendChild(botaoAção);
-            lugarDosGêneros.appendChild(botaoAdventure);
-            lugarDosGêneros.appendChild(botaoRacing);
-            lugarDosGêneros.appendChild(botaoSports);
-            lugarDosGêneros.appendChild(botaoStrategy);
-            lugarDosGêneros.appendChild(botaoIndie);
-            lugarDosGêneros.appendChild(botaoPuzzle);
-            lugarDosGêneros.appendChild(botaoRPG);
-            lugarDosGêneros.appendChild(botaoShooter);
+                if (generosCriados){
+                    botaoGenero.textContent=`Gêneros <`
+                    botaoGeneroDiv.style.width="90%"
+                    lugarDosGêneros.appendChild(botaoAção);
+                    lugarDosGêneros.appendChild(botaoAdventure);
+                    lugarDosGêneros.appendChild(botaoRacing);
+                    lugarDosGêneros.appendChild(botaoSports);
+                    lugarDosGêneros.appendChild(botaoStrategy);
+                    lugarDosGêneros.appendChild(botaoIndie);
+                    lugarDosGêneros.appendChild(botaoPuzzle);
+                    lugarDosGêneros.appendChild(botaoRPG);
+                    lugarDosGêneros.appendChild(botaoShooter);
 
 
-            botaoGeneroDiv.appendChild(lugarDosGêneros); 
-        }
+                    botaoGeneroDiv.appendChild(lugarDosGêneros); 
+                }
 
-        if (!generosCriados){
-            botaoGenero.textContent=`Gêneros >`
-            botaoGeneroDiv.style.width="fit-content"
-            lugarDosGêneros.removeChild(botaoAção);
-            lugarDosGêneros.removeChild(botaoAdventure);
-            lugarDosGêneros.removeChild(botaoIndie);
-            lugarDosGêneros.removeChild(botaoPuzzle);
-            lugarDosGêneros.removeChild(botaoRPG);
-            lugarDosGêneros.removeChild(botaoRacing);
-            lugarDosGêneros.removeChild(botaoSports);
-            lugarDosGêneros.removeChild(botaoShooter);
-            lugarDosGêneros.removeChild(botaoStrategy);
+                if (!generosCriados){
+                    botaoGenero.textContent=`Gêneros >`
+                    botaoGeneroDiv.style.width="fit-content"
+                    lugarDosGêneros.removeChild(botaoAção);
+                    lugarDosGêneros.removeChild(botaoAdventure);
+                    lugarDosGêneros.removeChild(botaoIndie);
+                    lugarDosGêneros.removeChild(botaoPuzzle);
+                    lugarDosGêneros.removeChild(botaoRPG);
+                    lugarDosGêneros.removeChild(botaoRacing);
+                    lugarDosGêneros.removeChild(botaoSports);
+                    lugarDosGêneros.removeChild(botaoShooter);
+                    lugarDosGêneros.removeChild(botaoStrategy);
 
-            botaoGeneroDiv.removeChild(lugarDosGêneros); 
-        }
-    });
+                    botaoGeneroDiv.removeChild(lugarDosGêneros); 
+                }
+            });
 
-    let incluirAction=false;
-    let incluirAdventure=false;
-    let incluirRacing=false;
-    let incluirSports=false;
-    let incluirStrategy=false;
-    let incluirIndie=false;
-    let incluirPuzzle=false;
-    let incluirRPG=false;
-    let incluirShooter=false;
+        //variaveis de controle de qual gênero está sendo ativado
+            let incluirAction=false;
+            let incluirAdventure=false;
+            let incluirRacing=false;
+            let incluirSports=false;
+            let incluirStrategy=false;
+            let incluirIndie=false;
+            let incluirPuzzle=false;
+            let incluirRPG=false;
+            let incluirShooter=false;
 
-    botaoAção.addEventListener('click',()=>{
-        incluirAction=!incluirAction;
-        if(incluirAction){
-            botaoAção.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoAção.style.backgroundColor="rgb(219, 222, 227)"; }})
+        //ativa os gêneros
+            botaoAção.addEventListener('click',()=>{
+                incluirAction=!incluirAction;
+                if(incluirAction){
+                    botaoAção.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                     botaoAção.style.backgroundColor="rgb(219, 222, 227)"; }})
 
-    botaoAdventure.addEventListener('click',()=>{
-        incluirAdventure=!incluirAdventure;
-        if(incluirAdventure){
-            botaoAdventure.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoAdventure.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoAdventure.addEventListener('click',()=>{
+                incluirAdventure=!incluirAdventure;
+                if(incluirAdventure){
+                    botaoAdventure.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                botaoAdventure.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoRacing.addEventListener('click',()=>{
-        incluirRacing=!incluirRacing;
-        if(incluirRacing){
-            botaoRacing.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoRacing.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoRacing.addEventListener('click',()=>{
+                incluirRacing=!incluirRacing;
+                if(incluirRacing){
+                   botaoRacing.style.backgroundColor="rgb(105, 108, 113)";}
+             else{
+                   botaoRacing.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoSports.addEventListener('click',()=>{
-        incluirSports=!incluirSports;
-        if(incluirSports){
-            botaoSports.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoSports.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoSports.addEventListener('click',()=>{
+                incluirSports=!incluirSports;
+                if(incluirSports){
+                    botaoSports.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoSports.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoStrategy.addEventListener('click',()=>{
-        incluirStrategy=!incluirStrategy;
-        if(incluirStrategy){
-            botaoStrategy.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoStrategy.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoStrategy.addEventListener('click',()=>{
+               incluirStrategy=!incluirStrategy;
+                if(incluirStrategy){
+                  botaoStrategy.style.backgroundColor="rgb(105, 108, 113)";}
+              else{
+                 botaoStrategy.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoIndie.addEventListener('click',()=>{
-        incluirIndie=!incluirIndie;
-        if(incluirIndie){
-            botaoIndie.style.backgroundColor="rgb(105, 108, 113)";}
+            botaoIndie.addEventListener('click',()=>{
+                incluirIndie=!incluirIndie;
+                if(incluirIndie){
+                    botaoIndie.style.backgroundColor="rgb(105, 108, 113)";}
 
-        else{
-           botaoIndie.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+                else{
+                   botaoIndie.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoPuzzle.addEventListener('click',()=>{
-        incluirPuzzle=!incluirPuzzle;
-        if(incluirPuzzle){
-            botaoPuzzle.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoPuzzle.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoPuzzle.addEventListener('click',()=>{
+                incluirPuzzle=!incluirPuzzle;
+                if(incluirPuzzle){
+                    botaoPuzzle.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoPuzzle.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoRPG.addEventListener('click',()=>{
-        incluirRPG=!incluirRPG;
-        if(incluirRPG){
-            botaoRPG.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoRPG.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoRPG.addEventListener('click',()=>{
+                incluirRPG=!incluirRPG;
+                if(incluirRPG){
+                    botaoRPG.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoRPG.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
 
-    botaoShooter.addEventListener('click',()=>{
-       incluirShooter=!incluirShooter;
-       if(incluirShooter){
-            botaoShooter.style.backgroundColor="rgb(105, 108, 113)";}
-        else{
-           botaoShooter.style.backgroundColor="rgb(219, 222, 227)"; }
-    })
+            botaoShooter.addEventListener('click',()=>{
+               incluirShooter=!incluirShooter;
+               if(incluirShooter){
+                    botaoShooter.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoShooter.style.backgroundColor="rgb(219, 222, 227)"; }
+            })
+        
+            
+        let generos; //string que vai ser inserida na url de pesquisa
+        let i; //controle de como a string vai ser formatada
 
-    let generos;
-    let i;
+        //essa função constroi a string "generos" que vai ser inserida na url a prtir de quais filtros foram ativados ou não
+            function lêGeneros() {
+                generos="";
+                i=0;
 
-    function lêGeneros() {
-        generos="";
-        i=0;
+                if (incluirAction){
+                    if (i==0)
+                        generos= generos + "&genres=action";
+                    else
+                        generos= generos + ",action";
+                    i++;
+                }
 
-        if (incluirAction){
-            if (i==0)
-                generos= generos + "&genres=action";
-            else
-                generos= gerenos + ",action";
-            i++;
-        }
+                if (incluirAdventure){
+                    if (i==0)
+                        generos= generos + "&genres=adventure";
+                    else
+                        generos= generos + ",adventure";
+                 i++;
+                }
 
-        if (incluirAdventure){
-            if (i==0)
-                generos= generos + "&genres=adventure";
-            else
-                generos= gerenos + ",adventure";
-            i++;
-        }
+                if (incluirRacing){
+                    if (i==0)
+                        generos= generos + "&genres=racing";
+                    else
+                        generos= generos + ",racing";
+                    i++;
+                }
 
-        if (incluirRacing){
-            if (i==0)
-                generos= generos + "&genres=racing";
-            else
-                generos= generos + ",racing";
-            i++;
-        }
+                if (incluirSports){
+                    if (i==0)
+                        generos= generos + "&genres=sports";
+                    else
+                       generos= generos + ",sports";
+                   i++;
+                }
 
-        if (incluirSports){
-            if (i==0)
-                generos= generos + "&genres=sports";
-            else
-                generos= generos + ",sports";
-            i++;
-        }
+                 if(incluirStrategy){
+                    if (i==0)
+                         generos= generos + "&genres=strategy";
+                     else
+                         generos= generos + ",strategy";
+                 i++;
+                 }
 
-        if(incluirStrategy){
-            if (i==0)
-                generos= generos + "&genres=strategy";
-            else
-                generos= generos + ",strategy";
-            i++;
-        }
+                 if(incluirIndie){
+                     if (i==0)
+                         generos= generos + "&genres=indie";
+                     else
+                         generos= generos + ",indie";
+                     i++;
+                }  
 
-        if(incluirIndie){
-            if (i==0)
-                generos= generos + "&genres=indie";
-            else
-                generos= generos + ",indie";
-            i++;
-        }
+                if(incluirPuzzle){
+                    if (i==0)
+                            generos= generos + "&genres=puzzle";
+                        else
+                            generos= generos + ",puzzle";
+                        i++;
+                }
 
-        if(incluirPuzzle){
-            if (i==0)
-                generos= generos + "&genres=puzzle";
-            else
-                generos= generos + ",puzzle";
-            i++;
-        }
+                if(incluirRPG){
+                    if (i==0)
+                        generos= generos + "&genres=RPG";
+                    else
+                        generos= generos + ",RPG";
+                    i++;
+                }
 
-        if(incluirRPG){
-            if (i==0)
-                generos= generos + "&genres=RPG";
-            else
-                generos= generos + ",RPG";
-            i++;
-        }
+                 if(incluirShooter){
+                     if (i==0)
+                         generos= generos + "&genres=shooter";
+                     else
+                         generos= generos + ",shooter";
+                     i++;
+                }
 
-         if(incluirShooter){
-            if (i==0)
-                generos= generos + "&genres=shooter";
-            else
-                generos= generos + ",shooter";
-            i++;
-        }
+                return generos; 
+            }     
 
-        return generos; 
-}
-
-botaoAplicar.addEventListener('click', buscar);
+    //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
+        botaoAplicar.addEventListener('click', buscar);
