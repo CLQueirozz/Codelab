@@ -263,7 +263,6 @@
 
             if (filtrosCriados){
                 displayFiltros.textContent=`Filtros <`
-                espaçoFiltro.style.margin="10px";
                 espaçoFiltro.appendChild(botaoGeneroDiv);
                 espaçoFiltro.appendChild(botaoTagDiv);
                 espaçoFiltro.appendChild(botaoPlataformaDiv);
@@ -272,7 +271,6 @@
 
             if (!filtrosCriados){
                 displayFiltros.textContent=`Filtros >`
-                espaçoFiltro.style.margin="0px";
                 espaçoFiltro.removeChild(botaoGeneroDiv);
                 espaçoFiltro.removeChild(botaoTagDiv);
                 espaçoFiltro.removeChild(botaoPlataformaDiv);
@@ -329,7 +327,6 @@
 
                 if (generosCriados){
                     botaoGenero.textContent=`Gêneros <`
-                    botaoGeneroDiv.style.width="90%"
                     lugarDosGêneros.appendChild(botaoAção);
                     lugarDosGêneros.appendChild(botaoAdventure);
                     lugarDosGêneros.appendChild(botaoRacing);
@@ -346,7 +343,6 @@
 
                 if (!generosCriados){
                     botaoGenero.textContent=`Gêneros >`
-                    botaoGeneroDiv.style.width="fit-content"
                     lugarDosGêneros.removeChild(botaoAção);
                     lugarDosGêneros.removeChild(botaoAdventure);
                     lugarDosGêneros.removeChild(botaoIndie);
@@ -550,7 +546,6 @@
 
                 if (tagsCriadas){
                     botaoTag.textContent=`Tags <`
-                    botaoTagDiv.style.width="90%"
                     lugarDasTags.appendChild(botaoSinglePlayer);
                     lugarDasTags.appendChild(botaoMultiPlayer);
                 
@@ -559,7 +554,6 @@
 
                 if (!tagsCriadas){
                     botaoTag.textContent=`Tags >`
-                    botaoTagDiv.style.width="fit-content"
                     lugarDasTags.removeChild(botaoSinglePlayer);
                     lugarDasTags.removeChild(botaoMultiPlayer);
 
