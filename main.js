@@ -141,7 +141,7 @@
         const search = document.getElementById("nome").value;
         const page = linkPag();
         const key= "1175c03391d84eaf9b022713f3c5e618";
-        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${lêGeneros()}${lêTags()}`
+        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${lêGeneros()}${lêTags()}${lêPlataformas()}`
         
         console.log(url);
         return url;
@@ -245,7 +245,7 @@
          botaoPlataformaDiv.id="plataformaDiv";
          const botaoPlataforma=document.createElement("button");
          botaoPlataforma.id="plataforma";
-         botaoPlataforma.textContent="Disponível em >";
+         botaoPlataforma.textContent="Disponível para >";
          botaoPlataformaDiv.appendChild(botaoPlataforma);
 
          const botaoAplicarDiv=document.createElement("div");
@@ -262,19 +262,19 @@
             filtrosCriados=!filtrosCriados;
 
             if (filtrosCriados){
-                displayFiltros.textContent=`Filtros <`
+                displayFiltros.textContent=`Filtros <`;
                 espaçoFiltro.appendChild(botaoGeneroDiv);
                 espaçoFiltro.appendChild(botaoTagDiv);
                 espaçoFiltro.appendChild(botaoPlataformaDiv);
                 espaçoFiltro.appendChild(botaoAplicarDiv);
             }
 
-            if (!filtrosCriados){
+            else{
                 displayFiltros.textContent=`Filtros >`
                 espaçoFiltro.removeChild(botaoGeneroDiv);
                 espaçoFiltro.removeChild(botaoTagDiv);
-                espaçoFiltro.removeChild(botaoPlataformaDiv);
-                espaçoFiltro.removeChild(botaoAplicarDiv);
+                    espaçoFiltro.removeChild(botaoPlataformaDiv);
+                    espaçoFiltro.removeChild(botaoAplicarDiv);
             }
         });
 
@@ -286,39 +286,35 @@
 
         //cria os botões de cada tipo de gênero
             const botaoAção=document.createElement("button");
-            botaoAção.id="ação";
+            botaoAção.className="botbot";
             botaoAção.textContent="Ação";
 
             const botaoIndie=document.createElement("button");
-            botaoIndie.id="indie";
+            botaoIndie.className="botbot";
             botaoIndie.textContent="Indie";
 
             const botaoPuzzle=document.createElement("button");
-            botaoPuzzle.id="puzzle";
+            botaoPuzzle.className="botbot";
             botaoPuzzle.textContent="Puzzle";
 
             const botaoAdventure=document.createElement("button");
-            botaoAdventure.id="adventure";
+            botaoAdventure.className="botbot";
             botaoAdventure.textContent="Aventura";
 
-            const botaoRPG=document.createElement("button");
-            botaoRPG.id="RPG";
-            botaoRPG.textContent="RPG";
-
             const botaoStrategy=document.createElement("button");
-            botaoStrategy.id="strategy";
+            botaoStrategy.className="botbot";
             botaoStrategy.textContent="Estratégia";
 
             const botaoShooter=document.createElement("button");
-            botaoShooter.id="shooter";
+            botaoShooter.className="botbot";
             botaoShooter.textContent="Shooter";
 
             const botaoSports=document.createElement("button");
-            botaoSports.id="sports";
+            botaoSports.className="botbot";
             botaoSports.textContent="Esportes";
 
             const botaoRacing=document.createElement("button");
-            botaoRacing.id="racing";
+            botaoRacing.className="botbot";
             botaoRacing.textContent="Corrida";
 
         //abre e fecha o menu de opçoes de gênero
@@ -334,7 +330,6 @@
                     lugarDosGêneros.appendChild(botaoStrategy);
                     lugarDosGêneros.appendChild(botaoIndie);
                     lugarDosGêneros.appendChild(botaoPuzzle);
-                    lugarDosGêneros.appendChild(botaoRPG);
                     lugarDosGêneros.appendChild(botaoShooter);
 
 
@@ -347,7 +342,6 @@
                     lugarDosGêneros.removeChild(botaoAdventure);
                     lugarDosGêneros.removeChild(botaoIndie);
                     lugarDosGêneros.removeChild(botaoPuzzle);
-                    lugarDosGêneros.removeChild(botaoRPG);
                     lugarDosGêneros.removeChild(botaoRacing);
                     lugarDosGêneros.removeChild(botaoSports);
                     lugarDosGêneros.removeChild(botaoShooter);
@@ -365,7 +359,6 @@
             let incluirStrategy=false;
             let incluirIndie=false;
             let incluirPuzzle=false;
-            let incluirRPG=false;
             let incluirShooter=false;
 
         //ativa os gêneros
@@ -374,14 +367,14 @@
                 if(incluirAction){
                     botaoAção.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                     botaoAção.style.backgroundColor="rgb(219, 222, 227)"; }})
+                     botaoAção.style.backgroundColor="rgb(178, 191, 215)"; }})
 
             botaoAdventure.addEventListener('click',()=>{
                 incluirAdventure=!incluirAdventure;
                 if(incluirAdventure){
                     botaoAdventure.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                botaoAdventure.style.backgroundColor="rgb(219, 222, 227)"; }
+                botaoAdventure.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoRacing.addEventListener('click',()=>{
@@ -389,7 +382,7 @@
                 if(incluirRacing){
                    botaoRacing.style.backgroundColor="rgb(105, 108, 113)";}
              else{
-                   botaoRacing.style.backgroundColor="rgb(219, 222, 227)"; }
+                   botaoRacing.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoSports.addEventListener('click',()=>{
@@ -397,7 +390,7 @@
                 if(incluirSports){
                     botaoSports.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                   botaoSports.style.backgroundColor="rgb(219, 222, 227)"; }
+                   botaoSports.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoStrategy.addEventListener('click',()=>{
@@ -405,7 +398,7 @@
                 if(incluirStrategy){
                   botaoStrategy.style.backgroundColor="rgb(105, 108, 113)";}
               else{
-                 botaoStrategy.style.backgroundColor="rgb(219, 222, 227)"; }
+                 botaoStrategy.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoIndie.addEventListener('click',()=>{
@@ -414,7 +407,7 @@
                     botaoIndie.style.backgroundColor="rgb(105, 108, 113)";}
 
                 else{
-                   botaoIndie.style.backgroundColor="rgb(219, 222, 227)"; }
+                   botaoIndie.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoPuzzle.addEventListener('click',()=>{
@@ -422,15 +415,7 @@
                 if(incluirPuzzle){
                     botaoPuzzle.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                   botaoPuzzle.style.backgroundColor="rgb(219, 222, 227)"; }
-            })
-
-            botaoRPG.addEventListener('click',()=>{
-                incluirRPG=!incluirRPG;
-                if(incluirRPG){
-                    botaoRPG.style.backgroundColor="rgb(105, 108, 113)";}
-                else{
-                   botaoRPG.style.backgroundColor="rgb(219, 222, 227)"; }
+                   botaoPuzzle.style.backgroundColor="rgb(178, 191, 215)"; }
             })
 
             botaoShooter.addEventListener('click',()=>{
@@ -438,7 +423,7 @@
                if(incluirShooter){
                     botaoShooter.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                   botaoShooter.style.backgroundColor="rgb(219, 222, 227)"; }
+                   botaoShooter.style.backgroundColor="rgb(178, 191, 215)"; }
             })
         
             
@@ -506,14 +491,6 @@
                         i++;
                 }
 
-                if(incluirRPG){
-                    if (i==0)
-                        generos= generos + "&genres=RPG";
-                    else
-                        generos= generos + ",RPG";
-                    i++;
-                }
-
                  if(incluirShooter){
                      if (i==0)
                          generos= generos + "&genres=shooter";
@@ -533,11 +510,11 @@
 
         //cria os botões de cada tipo de tag
             const botaoSinglePlayer=document.createElement("button");
-            botaoSinglePlayer.id="SinglePlayer";
+            botaoSinglePlayer.className="botbot";
             botaoSinglePlayer.textContent="SinglePlayer";
 
             const botaoMultiPlayer=document.createElement("button");
-            botaoMultiPlayer.id="MultiPlayer";
+            botaoMultiPlayer.className="botbot";
             botaoMultiPlayer.textContent="MultiPlayer";
 
         //abre e fecha o menu de opçoes de tag
@@ -571,14 +548,14 @@
                 if(incluirSinglePlayer){
                     botaoSinglePlayer.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                     botaoSinglePlayer.style.backgroundColor="rgb(219, 222, 227)"; }})
+                     botaoSinglePlayer.style.backgroundColor="rgb(178, 191, 215)"; }})
 
            botaoMultiPlayer.addEventListener('click',()=>{
                 incluirMultiPlayer=!incluirMultiPlayer;
                 if(incluirMultiPlayer){
                     botaoMultiPlayer.style.backgroundColor="rgb(105, 108, 113)";}
                 else{
-                     botaoMultiPlayer.style.backgroundColor="rgb(219, 222, 227)"; }})
+                     botaoMultiPlayer.style.backgroundColor="rgb(178, 191, 215)"; }})
         
             
         let tags; //string que vai ser inserida na url de pesquisa
@@ -606,6 +583,391 @@
                 }
 
                 return tags; 
+            }
+    
+    //filtro de plataformas
+        let plataformasCriados=false;
+
+        const lugarDasPlataformas=document.createElement("div");
+        lugarDasPlataformas.id="lugarPlataformas";
+
+        //cria os botões de cada tipo de plataforma
+            const botaoPC=document.createElement("button");
+            botaoPC.className="botbot";
+            botaoPC.textContent="PC";
+
+            const botaoIOS=document.createElement("button");
+            botaoIOS.className="botbot";
+            botaoIOS.textContent="iOS";
+
+            const botaoAndroid=document.createElement("button");
+            botaoAndroid.className="botbot";
+            botaoAndroid.textContent="Android";
+
+            const botaoPlaystation5=document.createElement("button");
+            botaoPlaystation5.className="botbot";
+            botaoPlaystation5.textContent="PlayStation 5";
+
+            const botaoPlaystation4=document.createElement("button");
+            botaoPlaystation4.className="botbot";
+            botaoPlaystation4.textContent="PlayStation 4";
+
+            const botaoPlaystation3=document.createElement("button");
+            botaoPlaystation3.className="botbot";
+            botaoPlaystation3.textContent="PlayStation 3";
+
+            const botaoPlaystation2=document.createElement("button");
+            botaoPlaystation2.className="botbot";
+            botaoPlaystation2.textContent="PlayStation 2";
+
+            const botaoXboxOne=document.createElement("button");
+            botaoXboxOne.className="botbot";
+            botaoXboxOne.textContent="Xbox One";
+
+            const botaoXbox360=document.createElement("button");
+            botaoXbox360.className="botbot";
+            botaoXbox360.textContent="Xbox 360";
+
+            const botaoNintendoSwitch=document.createElement("button");
+            botaoNintendoSwitch.className="botbot";
+            botaoNintendoSwitch.textContent="Nintendo Switch";
+
+            const botaoNintendo3DS=document.createElement("button");
+            botaoNintendo3DS.className="botbot";
+            botaoNintendo3DS.textContent="Nintendo 3DS";
+
+            const botaoNintendoDS=document.createElement("button");
+            botaoNintendoDS.className="botbot";
+            botaoNintendoDS.textContent="Nintendo DS";
+
+            const botaoNintendo64=document.createElement("button");
+            botaoNintendo64.className="botbot";
+            botaoNintendo64.textContent="Nintendo 64";
+
+            const botaoWii=document.createElement("button");
+            botaoWii.className="botbot";
+            botaoWii.textContent="Wii/Wii U";
+
+            const botaoAtari=document.createElement("button");
+            botaoAtari.className="botbot";
+            botaoAtari.textContent="Atari";  
+
+        //abre e fecha o menu de opçoes de plataformas
+            botaoPlataforma.addEventListener('click',()=> {
+                plataformasCriados=!plataformasCriados;
+
+                if (plataformasCriados){
+                    botaoPlataforma.textContent=`Disponível para <`
+                    lugarDasPlataformas.appendChild(botaoPC);
+                    lugarDasPlataformas.appendChild(botaoAndroid);
+                    lugarDasPlataformas.appendChild(botaoIOS);
+                    lugarDasPlataformas.appendChild(botaoPlaystation2);
+                    lugarDasPlataformas.appendChild(botaoPlaystation3);
+                    lugarDasPlataformas.appendChild(botaoPlaystation4);
+                    lugarDasPlataformas.appendChild(botaoPlaystation5);
+                    lugarDasPlataformas.appendChild(botaoXbox360);
+                    lugarDasPlataformas.appendChild(botaoXboxOne);
+                    lugarDasPlataformas.appendChild(botaoNintendo64);
+                    lugarDasPlataformas.appendChild(botaoNintendoDS);
+                    lugarDasPlataformas.appendChild(botaoNintendo3DS);
+                    lugarDasPlataformas.appendChild(botaoWii);
+                    lugarDasPlataformas.appendChild(botaoNintendoSwitch);
+                    lugarDasPlataformas.appendChild(botaoAtari);
+
+
+                    botaoPlataformaDiv.appendChild(lugarDasPlataformas);} 
+                
+
+                if (!plataformasCriados){
+                    botaoPlataforma.textContent=`Disponível para >`
+                    lugarDasPlataformas.removeChild(botaoPC);
+                    lugarDasPlataformas.removeChild(botaoAndroid);
+                    lugarDasPlataformas.removeChild(botaoIOS);
+                    lugarDasPlataformas.removeChild(botaoPlaystation2);
+                    lugarDasPlataformas.removeChild(botaoPlaystation3);
+                    lugarDasPlataformas.removeChild(botaoPlaystation4);
+                    lugarDasPlataformas.removeChild(botaoPlaystation5);
+                    lugarDasPlataformas.removeChild(botaoXbox360);
+                    lugarDasPlataformas.removeChild(botaoXboxOne);
+                    lugarDasPlataformas.removeChild(botaoNintendo3DS);
+                    lugarDasPlataformas.removeChild(botaoNintendoDS);
+                    lugarDasPlataformas.removeChild(botaoNintendoSwitch);
+                    lugarDasPlataformas.removeChild(botaoNintendo64);
+                    lugarDasPlataformas.removeChild(botaoWii);
+                    lugarDasPlataformas.appendChild(botaoAtari);
+
+
+                    botaoPlataformaDiv.removeChild(lugarDasPlataformas); 
+                
+            }});
+
+        //variaveis de controle de qual plataforma está sendo ativada
+            let incluirPC=false;
+            let incluirAndroid=false;
+            let incluirIOS=false;
+            let incluirPlaystation5=false;
+            let incluirPlaystation4=false;
+            let incluirPlaystation3=false;
+            let incluirPlaystation2=false;
+            let incluirXbox1=false;
+            let incluirXbox360=false;
+            let incluirWii=false;
+            let incluirNSwitch=false;
+            let incluirN3DS=false;
+            let incluirNDS=false;
+            let incluirN64=false;
+            let incluirAtari=false;
+
+        //ativa as platadormas
+            botaoPC.addEventListener('click',()=>{
+                incluirPC=!incluirPC;
+                if(incluirPC){
+                    botaoPC.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                     botaoPC.style.backgroundColor="rgb(178, 191, 215)"; }})
+
+            botaoAndroid.addEventListener('click',()=>{
+                incluirAndroid=!incluirAndroid;
+                if(incluirAndroid){
+                    botaoAndroid.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                    botaoAndroid.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoIOS.addEventListener('click',()=>{
+                incluirIOS=!incluirIOS;
+                if(incluirIOS){
+                   botaoIOS.style.backgroundColor="rgb(105, 108, 113)";}
+             else{
+                   botaoIOS.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoPlaystation2.addEventListener('click',()=>{
+                incluirPlaystation2=!incluirPlaystation2;
+                if(incluirPlaystation2){
+                    botaoPlaystation2.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoPlaystation2.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoPlaystation3.addEventListener('click',()=>{
+                incluirPlaystation3=!incluirPlaystation3;
+                if(incluirPlaystation3){
+                    botaoPlaystation3.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoPlaystation3.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoPlaystation4.addEventListener('click',()=>{
+                incluirPlaystation4=!incluirPlaystation4;
+                if(incluirPlaystation4){
+                    botaoPlaystation4.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoPlaystation4.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoPlaystation5.addEventListener('click',()=>{
+                incluirPlaystation5=!incluirPlaystation5;
+                if(incluirPlaystation5){
+                    botaoPlaystation5.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoPlaystation5.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoXbox360.addEventListener('click',()=>{
+                incluirXbox360=!incluirXbox360;
+                if(incluirXbox360){
+                    botaoXbox360.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoXbox360.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoXboxOne.addEventListener('click',()=>{
+                incluirXbox1=!incluirXbox1;
+                if(incluirXbox1){
+                    botaoXboxOne.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoXboxOne.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoNintendo3DS.addEventListener('click',()=>{
+                incluirN3DS=!incluirN3DS;
+                if(incluirN3DS){
+                    botaoNintendo3DS.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoNintendo3DS.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoNintendoDS.addEventListener('click',()=>{
+                incluirNDS=!incluirNDS;
+                if(incluirNDS){
+                    botaoNintendoDS.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoNintendoDS.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoNintendo64.addEventListener('click',()=>{
+                incluirN64=!incluirN64;
+                if(incluirN64){
+                    botaoNintendo64.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoNintendo64.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoNintendoSwitch.addEventListener('click',()=>{
+                incluirNSwitch=!incluirNSwitch;
+                if(incluirNSwitch){
+                    botaoNintendoSwitch.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoNintendoSwitch.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoWii.addEventListener('click',()=>{
+                incluirWii=!incluirWii;
+                if(incluirWii){
+                    botaoWii.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoWii.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+
+            botaoAtari.addEventListener('click',()=>{
+                incluirAtari=!incluirAtari;
+                if(incluirAtari){
+                    botaoAtari.style.backgroundColor="rgb(105, 108, 113)";}
+                else{
+                   botaoAtari.style.backgroundColor="rgb(178, 191, 215)"; }
+            })
+        
+            
+        let plataformas; //string que vai ser inserida na url de pesquisa
+        let k; //controle de como a string vai ser formatada
+
+        //essa função constroi a string "platafromas" que vai ser inserida na url a prtir de quais filtros foram ativados ou não
+            function lêPlataformas() {
+                plataformas="";
+                k=0;
+
+                if (incluirPC){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=4";
+                    else
+                        plataformas= plataformas + ",4";
+                    k++;
+                }
+
+                if (incluirAndroid){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=21";
+                    else
+                        plataformas= plataformas + ",21";
+                    k++;
+                }
+
+                if (incluirIOS){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=3";
+                    else
+                        plataformas= plataformas + ",3";
+                    k++;
+                }
+
+                if (incluirPlaystation2){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=15";
+                    else
+                        plataformas= plataformas + ",PlayStation 15";
+                    k++;
+                }
+
+                if (incluirPlaystation3){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=16";
+                    else
+                        plataformas= plataformas + ",16";
+                    k++;
+                }
+
+                if (incluirPlaystation4){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=18";
+                    else
+                        plataformas= plataformas + ",18";
+                    k++;
+                }
+
+                if (incluirPlaystation5){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=187";
+                    else
+                        plataformas= plataformas + ",187";
+                    k++;
+                }
+
+                if (incluirXbox1){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=1";
+                    else
+                        plataformas= plataformas + ",1";
+                    k++;
+                }
+
+                if (incluirXbox360){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=14";
+                    else
+                        plataformas= plataformas + ",14";
+                    k++;
+                }
+
+                if (incluirNSwitch){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=7";
+                    else
+                        plataformas= plataformas + ",7";
+                    k++;
+                }
+
+                if (incluirN3DS){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=8";
+                    else
+                        plataformas= plataformas + ",8";
+                    k++;
+                }
+
+                if (incluirNDS){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=9";
+                    else
+                        plataformas= plataformas + ",9";
+                    k++;
+                }
+
+                if (incluirN64){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=83";
+                    else
+                        plataformas= plataformas + ",83";
+                    k++;
+                }
+
+                if (incluirWii){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=10,11";
+                    else
+                        plataformas= plataformas + ",10,11";
+                    k++;
+                }
+
+                if (incluirAtari){
+                    if (k==0)
+                        plataformas= plataformas + "&platforms=28,31,23,22,25,34,46,50";
+                    else
+                        plataformas= plataformas + ",28,31,23,22,25,34,46,50";
+                    k++;
+                }
+
+                return plataformas; 
             }
 
     //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
