@@ -140,9 +140,9 @@
         const search = document.getElementById("nome").value;
         const page = linkPag();
         const key= "1175c03391d84eaf9b022713f3c5e618";
-        const plataformas= formaParâmetros(listaPlataformas, '&platforms');
-        const tags= formaParâmetros(listaTags, '&tags');
-        const gêneros= formaParâmetros(listaGêneros, '&genres') 
+        const plataformas= formaParâmetrosFiltro(listaPlataformas, '&platforms');
+        const tags= formaParâmetrosFiltro(listaTags, '&tags');
+        const gêneros= formaParâmetrosFiltro(listaGêneros, '&genres');
         
         const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${plataformas}${tags}${gêneros}`
         
@@ -183,7 +183,7 @@
                     lancamento:result.released,
                     avaliacao: result.rating,
                     imagem: result.background_image,
-                    plataformas: []}
+                    plataformas: result.platforms}
         
         
                 if(result.platforms && result.platforms.length > 0) {
@@ -202,23 +202,44 @@
 
     }
 
-//teste para ver se a api tá pegando o q a gente quer
-    function teste(){
-        globalGameData.forEach(game=>{
-            console.log(game.nome);
-            console.log(game.id);
-            console.log(game.lancamento);
-            console.log(game.avaliacao);
-            console.log(game.imagem);
-
-            game.plataformas.forEach(plat=>{
-                console.log(plat);
-            });
-
-            console.log("---${game.posicao}---");
-    })}
-
 //filtro
+    //funçôes importantes de filtro
+        function appendBotãoFiltro(parent, container){
+            container.forEach((item)=>{
+                const botão=document.createElement("button");
+                botão.className='botbot';
+                botão.textContent=item.nome;
+
+                botão.addEventListener('click', ()=>ativaçãoFiltro(container, botão, item));
+                
+                parent.appendChild(botão);
+                })
+            } 
+
+        function ativaçãoFiltro(container, botão, item){
+                if (item.activation==='0'){
+                    item.activation='1';
+                    botão.style.backgroundColor="rgb(105, 108, 113)";}
+
+                else{
+                    item.activation='0';
+                    botão.style.backgroundColor="rgb(178, 191, 215)"; }
+                }
+
+        function formaParâmetrosFiltro(container, tipoFiltro) {
+                let param=`${tipoFiltro}=`;
+                let i=0;
+                let ativos=[];
+
+                container.forEach((item)=>{
+                    if (item.activation=='1'){
+                        ativos.push(item.APIvalue);
+                        i=1;} })
+
+                param= param + ativos.join(',');
+                if(i>0) return param;
+
+                else return '';}
 
     //variáveis já presentes no HTML
         const larguraFiltro=document.getElementById("filtragem");
@@ -279,52 +300,7 @@
                 espaçoFiltro.removeChild(botaoPlataformaDiv);
                 espaçoFiltro.removeChild(botaoAplicarDiv);
             }
-        });
-
-    //funçôes importantes
-        function appendBotão(parent, container){
-            container.forEach((item)=>{
-                const botão=document.createElement("button");
-                botão.className='botbot';
-                botão.textContent=item.nome;
-                botão.dataset.value=item.APIvalue;
-
-                botão.addEventListener('click', ()=>ativação(container, botão, item));
-                
-                parent.appendChild(botão);
-                })
-            } 
-
-        function ativação(container, botão, item){
-                if (item.activation==='0'){
-                    item.activation='1';
-                    botão.style.backgroundColor="rgb(105, 108, 113)";}
-
-                else{
-                    item.activation='0';
-                    botão.style.backgroundColor="rgb(178, 191, 215)"; }
-                }
-
-        function formaParâmetros(container, tipoFiltro) {
-                let param=`${tipoFiltro}=`
-                let i=0;
-                let ativos=[];
-
-                
-                container.forEach((item)=>{
-                    if (item.activation=='1'){
-                        ativos.push(item.APIvalue);
-                        i=1}
-                })
-
-                param= param + ativos.join(',');
-                
-                if(i>0){
-                    return param;}
-
-                else{
-                    return '';}
-                }
+        });                
 
     //filtro de gênero 
         let generosCriados=false;
@@ -349,7 +325,7 @@
 
                 if (generosCriados){
                     botaoGenero.textContent=`Gêneros <`
-                    appendBotão(lugarDosGêneros, listaGêneros);
+                    appendBotãoFiltro(lugarDosGêneros, listaGêneros);
                     botaoGeneroDiv.appendChild(lugarDosGêneros); 
                 }
 
@@ -377,7 +353,7 @@
 
                 if (tagsCriadas){
                     botaoTag.textContent=`Tags <`
-                    appendBotão(lugarDasTags, listaTags);                
+                    appendBotãoFiltro(lugarDasTags, listaTags);                
                     botaoTagDiv.appendChild(lugarDasTags); 
                 }
 
@@ -394,8 +370,7 @@
         const lugarDasPlataformas=document.createElement("div");
         lugarDasPlataformas.id="lugarPlataformas";
 
-        //cria os botões de cada tipo de plataforma
-
+        //dados de cada tipo de plataforma
             const listaPlataformas=[
                 {id: 'PC', nome: 'PC', APIvalue:'4', activation: '0'},
                 {id: 'android', nome: 'Android', APIvalue:'21', activation: '0'},
@@ -421,7 +396,7 @@
 
                 if (plataformasCriados){
                     botaoPlataforma.textContent=`Disponível para <`
-                    appendBotão(lugarDasPlataformas, listaPlataformas)
+                    appendBotãoFiltro(lugarDasPlataformas, listaPlataformas)
                     botaoPlataformaDiv.appendChild(lugarDasPlataformas);} 
                 
 
