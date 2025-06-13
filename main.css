@@ -202,6 +202,8 @@ align-items: center;
     text-align: left;
     padding-top: 3%;
     width: 100%;
+
+    cursor: pointer;
 }
 
 #lugarGêneros, #lugarTags, #lugarPlataformas{
@@ -218,5 +220,10 @@ align-items: center;
     border: 2px solid rgb(58, 74, 105);
     border-radius: 8px;
 
-    width: 90%;
+    width: 85%;
+    height: 20px;
+
+    cursor: pointer;
 }
+
+
