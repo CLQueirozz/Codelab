@@ -1,6 +1,6 @@
 //algumas variaveis globais e divs MUITO importantes
     const resultado= document.getElementById("resultado");
-    const search = document.getElementById("nome").value;
+    const carregando= document.getElementById("carregando");
     let globalGameData= [];
     let globalPageNumero=1;
     let paginacaoCriada=false;
@@ -9,44 +9,44 @@
     let intervalo;
 
 //cria resumo para usuário sobre sua busca
-    function resumo(){
+    
+    //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
+        function resumo(){
+            let filtrosAtivos=[];
 
-        let relatório=document.getElementById("relatório");
-        let filtrosAtivos=[];
-        let i=0;
-
-        //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
-        //o contador i serve para ver se estamos lidando com 0, 1, ou um plural de filtros
             listaGêneros.forEach((coisa)=>{
                 if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome);
-                i++;}
+                    filtrosAtivos.push(coisa.nome);}
             })
 
             listaTags.forEach((coisa)=>{
                 if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome); 
-                i++;}
+                    filtrosAtivos.push(coisa.nome);}
             })
 
             listaPlataformas.forEach((coisa)=>{
                 if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome); 
-                i++;}
+                    filtrosAtivos.push(coisa.nome);}
             })
+            
+            return filtrosAtivos;}
         
-        //isso escreve no relatório o número de resultados, o nome da busca e quais filtros estão sendo utilizados
-            if(qtdTotalresul>0){
-                if (i==0){
-                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search}`}
-        
-                if (i==1){
-                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search} com o filtro: ${filtrosAtivos}`;}
+    //isso escreve no relatório o número de resultados, o nome da busca e quais filtros estão sendo utilizados
+        function escreveResumo(){
+            const arrayAtivos= resumo();
+            let relatório='';
 
-                if (i>1){
-                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search} com os filtros: ${filtrosAtivos.join(', ')}`;}
-        } 
-    }
+            if(qtdTotalresul>0){
+                if (arrayAtivos.length===0){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()}`}
+        
+                if (arrayAtivos.length===1){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com o filtro: ${arrayAtivos}`;}
+
+                if (arrayAtivos.length>1){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com os filtros: ${arrayAtivos.join(', ')}`;}
+
+        } return relatório;}
 
 //cria cards para os valores encontrados
     function mostrar() {
@@ -55,7 +55,8 @@
         clearInterval(intervalo);
         carregando.textContent='';
 
-        resumo();
+        const relatório=document.getElementById("relatório");
+        relatório.textContent=escreveResumo();
 
         globalGameData.forEach(game =>{ 
             
@@ -102,55 +103,61 @@
             }
     })
 }
+//paginaçâo
+    //Cria o card de paginação
+        function cardPag(){
+            const paginacao=document.getElementById("page");//fazendo referência ao div com id page no html
+            paginacao.replaceChildren(); 
+        
+            const botaoe=document.createElement("button");
+            botaoe.id="prev";
+            botaoe.textContent="⬅️";
 
-//Cria o card de paginação
-    function cardPag(){
-        const paginacao=document.createElement("div");//fazendo referência ao div com id page no html
-                paginacao.id="page";
+            const botaod=document.createElement("button");
+            botaod.id="next";
+            botaod.textContent="➡️";
 
-                const botaoe=document.createElement("button");
-                botaoe.id="prev";
-                botaoe.textContent="⬅️";
-
-                const botaod=document.createElement("button");
-                botaod.id="next";
-                botaod.textContent="➡️";
-
-                const texto=document.createElement("div");
-                texto.id="texto";
+            const texto=document.createElement("div");
+            texto.id="texto";
                 
-                const n=document.createElement("p");
-                texto.appendChild(n);
+            const n=document.createElement("p");
+            texto.appendChild(n);
                 
-                const num=document.createElement("p");
-                num.textContent=globalPageNumero;
-                num.id="num";
-                texto.appendChild(num);
+            const num=document.createElement("p");
+            num.textContent=globalPageNumero;
+            num.id="num";
+            texto.appendChild(num);
 
-                paginacao.appendChild(botaoe);//appendChild na ordem que queremos <- [texto] ->
-                paginacao.appendChild(texto);
-                paginacao.appendChild(botaod);
+            paginacao.appendChild(botaoe);//appendChild na ordem que queremos <- [texto] ->
+            paginacao.appendChild(texto);
+            paginacao.appendChild(botaod);
 
-                document.body.appendChild(paginacao);//aparecer no fim da página
-
-                botaoe.addEventListener("click",()=> {
-                    if(globalPageNumero>1){
-                        globalPageNumero--;
-                    }
+            botaoe.addEventListener("click",()=> {
+                if(globalPageNumero>1){
+                    globalPageNumero--;}
                     buscar();
                     updatePag();
                 })
 
-                botaod.addEventListener("click",()=> {
-                    if(globalPageNumero<qtdTotalpag){
-                        globalPageNumero++;
-                    }
+            botaod.addEventListener("click",()=> {
+                if(globalPageNumero<qtdTotalpag){
+                    globalPageNumero++;}
                     buscar();
                     updatePag();
                 })
 
-                paginacaoCriada=true;
-    }
+                paginacaoCriada=true;}
+
+    //muda no html a contagem da pagina para que o usuario veja em qual pagina ele está
+        function updatePag(){
+            const valor=document.getElementById('num');
+            if(valor){
+                valor.textContent=globalPageNumero;}
+        }
+
+    //retorna o numero da pagina, util para ser lido depois pela função link e pela função buscar
+        function linkPag(){
+            return globalPageNumero;}
 
 //põe os event listeners do botão e do enter para pesquisar
     const enter= document.getElementById("nome");
@@ -160,7 +167,6 @@
         if (event.key==='Enter'){
             globalPageNumero=1; //atualiza o valor da página a cada nova busca
             buscar();
-            pag();
         }})
 
     button.addEventListener('click',()=> {
@@ -168,34 +174,27 @@
         buscar();
     });
 
-    //muda no html a contagem da pagina para que o usuario veja em qual pagina ele está
-        function updatePag(){
-            const valor=document.getElementById('num');
-            if(valor){
-                valor.textContent=globalPageNumero;
-            }
-    }
-
-    //retorna o numero da pagina, util para ser lido depois pela função link e pela função buscar
-        function linkPag(){
-            return globalPageNumero;
-        }
+//pega o nome da busca
+    function getName(){
+        let search = "";
+        if (document.getElementById("nome").value)
+            search=document.getElementById("nome").value;
+        return search;}
 
 //define a url da API
     function link(){
+        const key= "1175c03391d84eaf9b022713f3c5e618";
+        const search=getName();
         const page = linkPag();
         const plataformas= quaisFiltros(listaPlataformas, '&platforms');
         const tags= quaisFiltros(listaTags, '&tags');
         const gêneros= quaisFiltros(listaGêneros, '&genres');
-        const key= "1175c03391d84eaf9b022713f3c5e618";
         const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${plataformas}${tags}${gêneros}`
         
-        return url;
-    }
+        return url;}
 
 //cria a animaçao de "carregando ..."
     function loading(){
-        const carregando= document.getElementById("carregando");
         let numPontos=0;
 
         //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
@@ -204,80 +203,90 @@
                 carregando.textContent='Carregando'+ '.'.repeat(numPontos);
             },500);}
 
-//busca na api 
-    async function buscar(){
-        
-        //inicializa o carregando...
-        intervalo=loading();
-
-        //vai na API
-        try{
-            const response= await fetch(link());
-            const dados= await response.json();
-        
-        //quantidade total de resultados
-        qtdTotalresul=dados.count;
-
-        //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
-        updatePag();
-        //20 jogos por página, logo a quantidade total de páginas a serem exibidas por pesquisa é a divisão arredondada para cima
-        qtdTotalpag=Math.ceil(qtdTotalresul/20);
-
-
-        //limpa o q estava antes na variavel global
-        globalGameData=[]; 
-
-        //separa os diferentes atributos de cada jogo
-            dados.results.forEach((result)=>{
-                const localGameData={
-                    nome:result.name,
-                    id: result.id,
-                    lancamento:result.released,
-                    avaliacao: result.rating,
-                    imagem: result.background_image,
-                    plataformas: []}
-        
-        
-                if(result.platforms && result.platforms.length > 0) {
-                    result.platforms.forEach((item)=>{
-                        if(item.platform)
-                            localGameData.plataformas.push(item.platform.name); 
-                        });
-                }
-
-    //pôe os atributos encontrados na função busca dentro da variavel global que vai ser lida depois
-            globalGameData.push(localGameData);
-    });
-
-        setTimeout(mostrar, 1000);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-
-    }
-
-
-    catch(error){
-        console.log(error);
+//interface de erro
+    function deuRuim(){
         //remove o "carregando ...""
             clearInterval(intervalo);
             carregando.textContent='';
 
         //cria uma interface user-friendly de q houve um erro
-        cardErro=document.createElement("div");
-        cardErro.id='cardErro';
-        cardErro.textContent='❌ Erro ao pesquisar jogo ❌';
-        resultado.appendChild(cardErro);
-    }}
+            cardErro=document.createElement("div");
+            cardErro.id='cardErro';
+            cardErro.textContent='❌ Erro ao pesquisar jogo ❌';
+            resultado.replaceChildren;
+            resultado.appendChild(cardErro);
+    }
+
+//busca na api 
+    async function buscar(){
+        
+        //inicializa o carregando...
+            if(intervalo) {
+                clearInterval(intervalo);}
+    
+            intervalo=loading();
+
+        //vai na API
+            try{
+                const response= await fetch(link());
+                const dados= await response.json();
+        
+                qtdTotalresul=dados.count; //quantidade total de resultados
+
+                updatePag(); //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
+                
+                qtdTotalpag=Math.ceil(qtdTotalresul/20);  //20 jogos por página, logo a quantidade total de páginas a serem exibidas por pesquisa é a divisão arredondada para cima
+                
+                globalGameData=[]; //limpa o q estava antes na variavel global
+                //separa os diferentes atributos de cada jogo
+                    dados.results.forEach((result)=>{
+                        const localGameData={
+                            nome:result.name,
+                            id: result.id,
+                            lancamento:result.released,
+                            avaliacao: result.rating,
+                            imagem: result.background_image,
+                            plataformas: []}
+        
+        
+                        if(result.platforms && result.platforms.length > 0) {
+                            result.platforms.forEach((item)=>{
+                            if(item.platform)
+                                localGameData.plataformas.push(item.platform.name); });
+                        }
+
+                globalGameData.push(localGameData);}); //pôe os atributos encontrados na função busca dentro da variavel global que vai ser lida depois
+
+                setTimeout(mostrar, 1000); //só pro carregar não ficar tiltando esquisitamente
+                window.scrollTo({ top: 0, behavior: "smooth" }); //volta sempre pro início da página
+
+                //fecha o menu de filtros
+                espaçoFiltro.replaceChildren();
+                espaçoOpçôes.replaceChildren();
+                displayFiltros.textContent=`Filtros >`
+                larguraFiltro.style.flexDirection='row';
+                displayFiltros.style.marginTop='0px'
+                filtrosCriados=false;
+                }
+
+            catch(error){
+                console.log(error);
+                deuRuim();}}
 
 //filtro
     //funçôes importantes de filtro
 
-        //essas 2 funções criam um botâo pra cada dado na array de filtros fornecida como container no parâmetro, põe o event 
-        //listener neles pra ativar os filtros e já dá o appendchild para a div fornecida como parent no parâmetro. 
+        /*essas 3 funções criam um botâo pra cada dado na array de filtros fornecida como container no parâmetro, põe o event 
+        listener neles pra ativar os filtros, muda a cor do botão pra indicar que ele está sendo utilizado, e já dá o 
+        appendchild para a div fornecida como parent no parâmetro. */
             function appendBotãoFiltro(parent, container){
-             container.forEach((item)=>{
-                  const botão=document.createElement("button");
+                parent.replaceChildren();//garante q botôes não sejam duplicados
+
+                container.forEach((item)=>{
+                    const botão=document.createElement("button");
                     botão.className='botbot';
                     botão.textContent=item.nome;
+                    ativaçãoCorFiltro(container, botão, item);
 
                     botão.addEventListener('click', ()=>ativaçãoFiltro(container, botão, item));
                 
@@ -286,40 +295,72 @@
             } 
 
             function ativaçãoFiltro(container, botão, item){
+                //muda o valor de ativaçâo da API e a cor do botão
                     if (item.activation==='0'){
                         item.activation='1';
-                        botão.style.backgroundColor="rgb(105, 108, 113)";}
+                        ativaçãoCorFiltro(container,botão, item);}
 
                     else{
-                        item.activation='0';
-                        botão.style.backgroundColor="rgb(178, 191, 215)"; }
+                        item.activation='0'; 
+                        ativaçãoCorFiltro(container,botão, item);}
+
+                    updateFiltros(); }
+
+            function ativaçãoCorFiltro(container, botão, item){
+                if (item.activation==='0'){
+                        botão.style.backgroundColor="rgb(178, 191, 215)";}
+
+                    else{
+                        botão.style.backgroundColor="rgb(105, 108, 113)";}
             }
         
         //essa é uma função pra busca na API, que retorna os nomes que vâo ser inseridos no link
             function quaisFiltros(container, tipoFiltro) {
-                    let param=`${tipoFiltro}=`;
-                    let i=0;
-                    let ativos=[];
+                    let quais=`${tipoFiltro}=`; //isso aq inclui qual categoria de filtro q estamos buscando, tipo "&genre=", "&tags=", "&plataforms"
+                    let i=0; //controle de se exitem filtros sendo ativados dentro da categoria
+                    let ativos=[]; //array para os nomes dos filtros, tipo "Action", "Multiplayer", "Nintendo Switch"
 
-                    container.forEach((item)=>{
+                    container.forEach((item)=>{ //para cada item ativo, o nome q a API entende vai ser incluido na array "ativos"
                         if (item.activation=='1'){
                             ativos.push(item.APIvalue);
                             i=1;} })
 
-                    param= param + ativos.join(',');
-                    if(i>0) return param;
+                    quais= quais + ativos.join(',');
 
+                    if(i>0) return quais; 
                     else return '';}
+
+        //limpa todos os filtros já presentes naquela categoria ao por a activation como 0
+            function limpaFiltros(container){
+                container.forEach((coisa)=>{
+                    coisa.activation='0';})}
+
+        //atualiza o usuário de quais filtros estâo selecionados
+            let listaTotalFiltros= document.createElement("p");
+                listaTotalFiltros.id="listaFiltros";
+
+            function updateFiltros(){
+                const listagem=document.getElementById("listagemFiltros")
+                if(resumo().length>0){
+                    listaTotalFiltros.textContent=`${resumo().join(', ')}`;
+                    listagem.replaceChildren();//primeiro tira a antiga lista de filtros
+                    listagem.appendChild(listaTotalFiltros);} //põe a nova lista de filtors
+
+                else{
+                    listaTotalFiltros.textContent=``;
+                    if (listagem.contains(listaTotalFiltros))
+                        listagem.removeChild(listaTotalFiltros)}} //remove a lista
 
     //variáveis já presentes no HTML
         const larguraFiltro=document.getElementById("filtragem");
             const displayFiltros=document.getElementById("botãoFiltro");
             const espaçoFiltro=document.getElementById("lugarDosFiltros");
+            const espaçoOpçôes= document.getElementById("lugarDasOpções");
 
     //variavel que olha se a barra filtros está aberta ou não, no caso, ela começa fechada
         let filtrosCriados=false;
 
-    //cria os 4 botões presentes dentro do filtro: gêneros, tags, disponivel em, aplicar
+    //cria os 5 botões presentes dentro do filtro: gêneros, tags, disponivel em, aplicar, limpar todos os filtros
     //cria tbm algumas divs por motivos de css
          const botaoGeneroDiv=document.createElement("div");
          botaoGeneroDiv.id="generoDiv";
@@ -342,32 +383,41 @@
          botaoPlataforma.textContent="Disponível para >";
          botaoPlataformaDiv.appendChild(botaoPlataforma);
 
-         const botaoAplicarDiv=document.createElement("div");
-         botaoAplicarDiv.id="aplicarDiv";
          const botaoAplicar=document.createElement("button");
          botaoAplicar.id="aplicar";
          botaoAplicar.textContent="Aplicar";
-         botaoAplicarDiv.appendChild(botaoAplicar);
+
+         const botaoLimpar=document.createElement("button");
+         botaoLimpar.id="limpar";
+         botaoLimpar.textContent="Limpar todos os filtros";
         
     //event listener que verifica se a pessoa clicou no botão do filtro
-    //se clicou um número impar de vezes, o menu vai abrir e mostrar as opções de filtro
-    //se clicar um número par de vezes, o menu vai ser fechado e ocultar as opções de filtro
+    //se clicou um número impar de vezes: o menu vai abrir, vai mostrar as opções de filtro, muda a direçâo da flechinha e a lista vai ir pra baixo do botão
+    //se clicar um número par de vezes, o menu vai ser fechado, vai ocultar as opções de filtro, muda a direção da flechinha e a lista vai ir pro lado do botão
         displayFiltros.addEventListener('click',()=> {
             filtrosCriados=!filtrosCriados;
 
             if (filtrosCriados){
                 displayFiltros.textContent=`Filtros <`;
-                espaçoFiltro.appendChild(botaoGeneroDiv);
-                espaçoFiltro.appendChild(botaoTagDiv);
-                espaçoFiltro.appendChild(botaoPlataformaDiv);
-                espaçoFiltro.appendChild(botaoAplicarDiv);
-            }
+                larguraFiltro.style.flexDirection='column';
+                displayFiltros.style.marginTop='20px'
+                //para garantir q nada seja duplicado
+                    espaçoFiltro.replaceChildren();
+                    espaçoOpçôes.replaceChildren();
+                //cria os novos
+                    espaçoFiltro.appendChild(botaoGeneroDiv);
+                    espaçoFiltro.appendChild(botaoTagDiv);
+                    espaçoFiltro.appendChild(botaoPlataformaDiv);
+                    espaçoOpçôes.appendChild(botaoAplicar);
+                    espaçoOpçôes.appendChild(botaoLimpar);}
 
             else{
                 displayFiltros.textContent=`Filtros >`
+                larguraFiltro.style.flexDirection='row';
+                displayFiltros.style.marginTop='0px'
                 espaçoFiltro.replaceChildren();
-            }
-        });                
+                espaçoOpçôes.replaceChildren();}
+        });
 
     //filtro de gênero 
         let generosCriados=false; //controle de se os gêneros estâo abertos ou nâo
@@ -385,25 +435,24 @@
                 {nome: 'Indie', APIvalue:'indie', activation: '0'},
                 {nome: 'Puzzle', APIvalue:'puzzle', activation: '0'},
                 {nome: 'Estratégia', APIvalue:'strategy', activation: '0'},
-                {nome: 'Shooter', APIvalue:'shooter', activation: '0'},
-            ]
+                {nome: 'Shooter', APIvalue:'shooter', activation: '0'}]
             
         //abre e fecha o menu de opçoes de gênero
-            botaoGenero.addEventListener('click',()=> {
+            function criaGêneros(){
                 generosCriados=!generosCriados;
 
                 if (generosCriados){
                     botaoGenero.textContent=`Gêneros <`
-                    appendBotãoFiltro(lugarDosGêneros, listaGêneros);
-                    botaoGeneroDiv.appendChild(lugarDosGêneros); 
-                }
+                    //pra ter certeza q está vazio e nada seja duplicado
+                        lugarDosGêneros.replaceChildren();
+                    //agora sim coloca os novos
+                        appendBotãoFiltro(lugarDosGêneros, listaGêneros);
+                        botaoGeneroDiv.appendChild(lugarDosGêneros); }
 
                 if (!generosCriados){
                     botaoGenero.textContent=`Gêneros >`
                     lugarDosGêneros.replaceChildren();
-                    botaoGeneroDiv.removeChild(lugarDosGêneros); 
-                }
-            });   
+                    botaoGeneroDiv.removeChild(lugarDosGêneros); }};   
 
     //filtro de tags
         let tagsCriadas=false; //controle de se as tags estâo abertas ou não
@@ -415,25 +464,25 @@
         //banco de dados das tags
         const listaTags=[
             {nome: 'SinglePlayer', APIvalue:'singleplayer', activation: '0'},
-            {nome: 'MultiPlayer', APIvalue:'multiplayer', activation:'0'}
-        ]
+            {nome: 'MultiPlayer', APIvalue:'multiplayer', activation:'0'}]
 
         //abre e fecha o menu de opçoes de tag
-            botaoTag.addEventListener('click',()=> {
+            function criaTags(){
                 tagsCriadas=!tagsCriadas;
 
                 if (tagsCriadas){
                     botaoTag.textContent=`Tags <`
-                    appendBotãoFiltro(lugarDasTags, listaTags);                
-                    botaoTagDiv.appendChild(lugarDasTags); 
-                }
+                    //pra ter certeza q está vazio e não ocorra duplicaçâo
+                        lugarDasTags.replaceChildren();
+                    //agora sim coloca as coisas novas
+                        appendBotãoFiltro(lugarDasTags, listaTags);                
+                        botaoTagDiv.appendChild(lugarDasTags); }
 
                 if (!tagsCriadas){
                     botaoTag.textContent=`Tags >`
                     lugarDasTags.replaceChildren();
-                    botaoTagDiv.removeChild(lugarDasTags); 
-                }
-            });
+                    botaoTagDiv.removeChild(lugarDasTags); }
+            };
     
     //filtro de plataformas
         let plataformasCriados=false; //controle de se as plataformas estâo abertas ou nâo
@@ -458,31 +507,64 @@
                 {nome: 'Nintendo 3DS', APIvalue:'8', activation: '0'},
                 {nome: 'Nintendo DS', APIvalue:'9', activation: '0'},
                 {nome: 'Nintendo 64', APIvalue:'83', activation: '0'},
-                {nome: 'Atari', APIvalue:'28,31,23,22,25,34,46,50', activation: '0'}
-            ]
+                {nome: 'Atari', APIvalue:'28,31,23,22,25,34,46,50', activation: '0'}]
             
             
         //abre e fecha o menu de opçoes de plataformas
-            botaoPlataforma.addEventListener('click',()=> {
+            function criaPlataformas(){
                 plataformasCriados=!plataformasCriados;
 
                 if (plataformasCriados){
                     botaoPlataforma.textContent=`Disponível para <`
-                    appendBotãoFiltro(lugarDasPlataformas, listaPlataformas)
-                    botaoPlataformaDiv.appendChild(lugarDasPlataformas);} 
+                    //para ter certeza q esteja vazio e nada seja duplicado
+                        lugarDasPlataformas.replaceChildren();
+                    //agora sim coloca os novos
+                        appendBotãoFiltro(lugarDasPlataformas, listaPlataformas)
+                        botaoPlataformaDiv.appendChild(lugarDasPlataformas);} 
                 
 
                 if (!plataformasCriados){
                     botaoPlataforma.textContent=`Disponível para >`
                     lugarDasPlataformas.replaceChildren();
-                    botaoPlataformaDiv.removeChild(lugarDasPlataformas); 
-                
-            }});
+                    botaoPlataformaDiv.removeChild(lugarDasPlataformas); }
+                };
+
+    //funçâo para criar os menus de cada categoria de filtro
+        function criaMenu(){
+            let listenerGênero= null;
+            let listenerTag= null;
+            let listenerPlataforma= null;
+
+            if (listenerGênero)
+                botaoGenero.removeEventListener('click', criaGêneros);
+
+            if (listenerTag)
+                botaoTag.removeEventListener('click', criaTags);
+
+            if(listenerPlataforma)
+                botaoPlataforma.removeEventListener('click', criaPlataformas);
+
+            listenerGênero=criaGêneros();
+            listenerTag=criaTags();
+            listenerPlataforma=criaPlataformas();
+
+            botaoGenero.addEventListener('click', criaGêneros);
+            botaoPlataforma.addEventListener('click', criaPlataformas);
+            botaoTag.addEventListener('click', criaTags);
+            } criaMenu();
         
     //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados e fechar o menu feio de filtros
-        botaoAplicar.addEventListener('click', ()=>{
-            espaçoFiltro.replaceChildren();
-            filtrosCriados=false;
-            displayFiltros.textContent=`Filtros >`
-            buscar();
-        });
+        botaoAplicar.addEventListener('click', buscar);
+
+    //quando a pessoa clicar em limpar, tem que remover todos os filtros ativos
+        botaoLimpar.addEventListener('click', ()=>{
+            const cor=document.querySelectorAll('.botbot');
+
+            cor.forEach((coisa)=>{
+                coisa.style.backgroundColor= 'rgb(178, 191, 215)';
+            });        
+            limpaFiltros(listaGêneros);
+            limpaFiltros(listaTags);
+            limpaFiltros(listaPlataformas);
+            updateFiltros();
+        })
