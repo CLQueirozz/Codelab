@@ -1,15 +1,61 @@
-//algumas variaveis globais MUITO importantes
+//algumas variaveis globais e divs MUITO importantes
+    const resultado= document.getElementById("resultado");
+    const search = document.getElementById("nome").value;
     let globalGameData= [];
     let globalPageNumero=1;
     let paginacaoCriada=false;
     let qtdTotalpag=1;
-    const carregando= document.getElementById("carregando");
+    let qtdTotalresul;
+    let intervalo;
 
+//cria resumo para usuário sobre sua busca
+    function resumo(){
+
+        let relatório=document.getElementById("relatório");
+        let filtrosAtivos=[];
+        let i=0;
+
+        //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
+        //o contador i serve para ver se estamos lidando com 0, 1, ou um plural de filtros
+            listaGêneros.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome);
+                i++;}
+            })
+
+            listaTags.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome); 
+                i++;}
+            })
+
+            listaPlataformas.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome); 
+                i++;}
+            })
+        
+        //isso escreve no relatório o número de resultados, o nome da busca e quais filtros estão sendo utilizados
+            if(qtdTotalresul>0){
+                if (i==0){
+                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search}`}
+        
+                if (i==1){
+                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search} com o filtro: ${filtrosAtivos}`;}
+
+                if (i>1){
+                    relatório.textContent= `Há ${qtdTotalresul} resultados para a busca ${search} com os filtros: ${filtrosAtivos.join(', ')}`;}
+        } 
+    }
 
 //cria cards para os valores encontrados
     function mostrar() {
-        const resultado= document.getElementById("resultado");
         resultado.innerHTML=""; //limpa os resultados anteriores quando fazemos uma nova busca
+
+        clearInterval(intervalo);
+        carregando.textContent='';
+
+        resumo();
 
         globalGameData.forEach(game =>{ 
             
@@ -137,34 +183,40 @@
 
 //define a url da API
     function link(){
-        const search = document.getElementById("nome").value;
         const page = linkPag();
+        const plataformas= quaisFiltros(listaPlataformas, '&platforms');
+        const tags= quaisFiltros(listaTags, '&tags');
+        const gêneros= quaisFiltros(listaGêneros, '&genres');
         const key= "1175c03391d84eaf9b022713f3c5e618";
-        const plataformas= formaParâmetrosFiltro(listaPlataformas, '&platforms');
-        const tags= formaParâmetrosFiltro(listaTags, '&tags');
-        const gêneros= formaParâmetrosFiltro(listaGêneros, '&genres');
-        
         const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${plataformas}${tags}${gêneros}`
         
-        console.log(url);
         return url;
     }
 
+//cria a animaçao de "carregando ..."
+    function loading(){
+        const carregando= document.getElementById("carregando");
+        let numPontos=0;
+
+        //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
+            return setInterval(()=>{
+                numPontos= (numPontos+1)%4;
+                carregando.textContent='Carregando'+ '.'.repeat(numPontos);
+            },500);}
+
 //busca na api 
     async function buscar(){
-
-        carregando.textContent="Carregando..."
+        
+        //inicializa o carregando...
+        intervalo=loading();
 
         //vai na API
+        try{
             const response= await fetch(link());
             const dados= await response.json();
-
-            if(dados){
-                carregando.textContent=""}
-
         
         //quantidade total de resultados
-        const qtdTotalresul=dados.count;
+        qtdTotalresul=dados.count;
 
         //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
         updatePag();
@@ -183,7 +235,7 @@
                     lancamento:result.released,
                     avaliacao: result.rating,
                     imagem: result.background_image,
-                    plataformas: result.platforms}
+                    plataformas: []}
         
         
                 if(result.platforms && result.platforms.length > 0) {
@@ -197,49 +249,67 @@
             globalGameData.push(localGameData);
     });
 
-        mostrar();
+        setTimeout(mostrar, 1000);
         window.scrollTo({ top: 0, behavior: "smooth" });
 
     }
 
+
+    catch(error){
+        console.log(error);
+        //remove o "carregando ...""
+            clearInterval(intervalo);
+            carregando.textContent='';
+
+        //cria uma interface user-friendly de q houve um erro
+        cardErro=document.createElement("div");
+        cardErro.id='cardErro';
+        cardErro.textContent='❌ Erro ao pesquisar jogo ❌';
+        resultado.appendChild(cardErro);
+    }}
+
 //filtro
     //funçôes importantes de filtro
-        function appendBotãoFiltro(parent, container){
-            container.forEach((item)=>{
-                const botão=document.createElement("button");
-                botão.className='botbot';
-                botão.textContent=item.nome;
 
-                botão.addEventListener('click', ()=>ativaçãoFiltro(container, botão, item));
+        //essas 2 funções criam um botâo pra cada dado na array de filtros fornecida como container no parâmetro, põe o event 
+        //listener neles pra ativar os filtros e já dá o appendchild para a div fornecida como parent no parâmetro. 
+            function appendBotãoFiltro(parent, container){
+             container.forEach((item)=>{
+                  const botão=document.createElement("button");
+                    botão.className='botbot';
+                    botão.textContent=item.nome;
+
+                    botão.addEventListener('click', ()=>ativaçãoFiltro(container, botão, item));
                 
-                parent.appendChild(botão);
-                })
+                    parent.appendChild(botão);
+                    })
             } 
 
-        function ativaçãoFiltro(container, botão, item){
-                if (item.activation==='0'){
-                    item.activation='1';
-                    botão.style.backgroundColor="rgb(105, 108, 113)";}
+            function ativaçãoFiltro(container, botão, item){
+                    if (item.activation==='0'){
+                        item.activation='1';
+                        botão.style.backgroundColor="rgb(105, 108, 113)";}
 
-                else{
-                    item.activation='0';
-                    botão.style.backgroundColor="rgb(178, 191, 215)"; }
-                }
+                    else{
+                        item.activation='0';
+                        botão.style.backgroundColor="rgb(178, 191, 215)"; }
+            }
+        
+        //essa é uma função pra busca na API, que retorna os nomes que vâo ser inseridos no link
+            function quaisFiltros(container, tipoFiltro) {
+                    let param=`${tipoFiltro}=`;
+                    let i=0;
+                    let ativos=[];
 
-        function formaParâmetrosFiltro(container, tipoFiltro) {
-                let param=`${tipoFiltro}=`;
-                let i=0;
-                let ativos=[];
+                    container.forEach((item)=>{
+                        if (item.activation=='1'){
+                            ativos.push(item.APIvalue);
+                            i=1;} })
 
-                container.forEach((item)=>{
-                    if (item.activation=='1'){
-                        ativos.push(item.APIvalue);
-                        i=1;} })
+                    param= param + ativos.join(',');
+                    if(i>0) return param;
 
-                param= param + ativos.join(',');
-                if(i>0) return param;
-
-                else return '';}
+                    else return '';}
 
     //variáveis já presentes no HTML
         const larguraFiltro=document.getElementById("filtragem");
@@ -295,28 +365,27 @@
 
             else{
                 displayFiltros.textContent=`Filtros >`
-                espaçoFiltro.removeChild(botaoGeneroDiv);
-                espaçoFiltro.removeChild(botaoTagDiv);
-                espaçoFiltro.removeChild(botaoPlataformaDiv);
-                espaçoFiltro.removeChild(botaoAplicarDiv);
+                espaçoFiltro.replaceChildren();
             }
         });                
 
     //filtro de gênero 
-        let generosCriados=false;
+        let generosCriados=false; //controle de se os gêneros estâo abertos ou nâo
 
-        const lugarDosGêneros=document.createElement("div");
-        lugarDosGêneros.id="lugarGêneros";
+        //espaço para os gêneros
+            const lugarDosGêneros=document.createElement("div");
+            lugarDosGêneros.id="lugarGêneros";
 
-        const listaGêneros=[
-            {id: 'action', nome: 'Ação', APIvalue:'action', activation: '0'},
-            {id: 'adventure', nome: 'Aventura', APIvalue:'adventure0', activation: '0'},
-            {id: 'racing', nome: 'Corrida', APIvalue:'racing', activation: '0'},
-            {id: 'sports', nome: 'Esportes', APIvalue:'sports', activation: '0'},
-            {id: 'indie', nome: 'Indie', APIvalue:'indie', activation: '0'},
-            {id: 'puzzle', nome: 'Puzzle', APIvalue:'puzzle', activation: '0'},
-            {id: 'strategy', nome: 'Estratégia', APIvalue:'strategy', activation: '0'},
-            {id: 'shooter', nome: 'Shooter', APIvalue:'shooter', activation: '0'},
+        //banco de dados dos gêneros
+            const listaGêneros=[
+                {nome: 'Ação', APIvalue:'action', activation: '0'},
+                {nome: 'Aventura', APIvalue:'adventure', activation: '0'},
+                {nome: 'Corrida', APIvalue:'racing', activation: '0'},
+                {nome: 'Esportes', APIvalue:'sports', activation: '0'},
+                {nome: 'Indie', APIvalue:'indie', activation: '0'},
+                {nome: 'Puzzle', APIvalue:'puzzle', activation: '0'},
+                {nome: 'Estratégia', APIvalue:'strategy', activation: '0'},
+                {nome: 'Shooter', APIvalue:'shooter', activation: '0'},
             ]
             
         //abre e fecha o menu de opçoes de gênero
@@ -337,14 +406,16 @@
             });   
 
     //filtro de tags
-        let tagsCriadas=false;
+        let tagsCriadas=false; //controle de se as tags estâo abertas ou não
 
-        const lugarDasTags=document.createElement("div");
-        lugarDasTags.id="lugarTags";
-
+        //espaço para as tags
+            const lugarDasTags=document.createElement("div");
+            lugarDasTags.id="lugarTags";
+        
+        //banco de dados das tags
         const listaTags=[
-            {id: 'SinglePlayer', nome: 'SinglePlayer', APIvalue:'singleplayer', activation: '0'},
-            {id: 'MultiPlayer', nome: 'MultiPlayer', APIvalue:'mingleplayer', activation:'0'}
+            {nome: 'SinglePlayer', APIvalue:'singleplayer', activation: '0'},
+            {nome: 'MultiPlayer', APIvalue:'multiplayer', activation:'0'}
         ]
 
         //abre e fecha o menu de opçoes de tag
@@ -365,28 +436,29 @@
             });
     
     //filtro de plataformas
-        let plataformasCriados=false;
-
-        const lugarDasPlataformas=document.createElement("div");
-        lugarDasPlataformas.id="lugarPlataformas";
+        let plataformasCriados=false; //controle de se as plataformas estâo abertas ou nâo
+        
+        //espaço para as plataformas
+            const lugarDasPlataformas=document.createElement("div");
+            lugarDasPlataformas.id="lugarPlataformas";
 
         //dados de cada tipo de plataforma
             const listaPlataformas=[
-                {id: 'PC', nome: 'PC', APIvalue:'4', activation: '0'},
-                {id: 'android', nome: 'Android', APIvalue:'21', activation: '0'},
-                {id: 'ios', nome: 'iOS', APIvalue:'3', activation: '0'},
-                {id: 'PS2', nome: 'PlayStation 2', APIvalue:'15', activation: '0'},
-                {id: 'PS3', nome: 'PlayStation 3', APIvalue:'16', activation: '0'},
-                {id: 'PS4', nome: 'PlayStation 4', APIvalue:'18', activation: '0'},
-                {id: 'PS5', nome: 'PlayStation5', APIvalue:'187', activation: '0'},
-                {id: 'Xbox1', nome: 'Xbox One', APIvalue:'1', activation: '0'},
-                {id: 'Xbox360', nome: 'Xbox 360', APIvalue:'14', activation: '0'},
-                {id: 'Wii/Wii U', nome: 'Wii/Wii U', APIvalue:'10,11', activation: '0'},
-                {id: 'Nswitch', nome: 'Nintendo Switch', APIvalue:'7', activation: '0'},
-                {id: 'N3DS', nome: 'Nintendo 3DS', APIvalue:'8', activation: '0'},
-                {id: 'NDS', nome: 'Nintendo DS', APIvalue:'9', activation: '0'},
-                {id: 'N64', nome: 'Nintendo 64', APIvalue:'83', activation: '0'},
-                {id: 'Atari', nome: 'Atari', APIvalue:'28,31,23,22,25,34,46,50', activation: '0'}
+                {nome: 'PC', APIvalue:'4', activation: '0'},
+                {nome: 'Android', APIvalue:'21', activation: '0'},
+                {nome: 'iOS', APIvalue:'3', activation: '0'},
+                {nome: 'PlayStation 2', APIvalue:'15', activation: '0'},
+                {nome: 'PlayStation 3', APIvalue:'16', activation: '0'},
+                {nome: 'PlayStation 4', APIvalue:'18', activation: '0'},
+                {nome: 'PlayStation5', APIvalue:'187', activation: '0'},
+                {nome: 'Xbox One', APIvalue:'1', activation: '0'},
+                {nome: 'Xbox 360', APIvalue:'14', activation: '0'},
+                {nome: 'Wii/Wii U', APIvalue:'10,11', activation: '0'},
+                {nome: 'Nintendo Switch', APIvalue:'7', activation: '0'},
+                {nome: 'Nintendo 3DS', APIvalue:'8', activation: '0'},
+                {nome: 'Nintendo DS', APIvalue:'9', activation: '0'},
+                {nome: 'Nintendo 64', APIvalue:'83', activation: '0'},
+                {nome: 'Atari', APIvalue:'28,31,23,22,25,34,46,50', activation: '0'}
             ]
             
             
@@ -407,5 +479,10 @@
                 
             }});
         
-    //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
-        botaoAplicar.addEventListener('click', buscar);
+    //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados e fechar o menu feio de filtros
+        botaoAplicar.addEventListener('click', ()=>{
+            espaçoFiltro.replaceChildren();
+            filtrosCriados=false;
+            displayFiltros.textContent=`Filtros >`
+            buscar();
+        });
