@@ -524,12 +524,10 @@
                     botaoPlataformaDiv.removeChild(lugarDasPlataformas); }
                 };
 
-    //funçâo para criar os menus de cada categoria de filtro
-        function criaMenu(){
-            botaoGenero.addEventListener('click', criaGêneros);
-            botaoPlataforma.addEventListener('click', criaPlataformas);
-            botaoTag.addEventListener('click', criaTags);
-            } criaMenu();
+    //criar os menus de cada categoria de filtro
+        botaoGenero.addEventListener('click', criaGêneros);
+        botaoPlataforma.addEventListener('click', criaPlataformas);
+        botaoTag.addEventListener('click', criaTags);
         
     //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
         botaoAplicar.addEventListener('click', buscar);
