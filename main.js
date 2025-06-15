@@ -8,45 +8,93 @@
     let qtdTotalresul;
     let intervalo;
 
-//cria resumo para usuário sobre sua busca
-    
-    //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
-        function resumo(){
-            let filtrosAtivos=[];
+//pega o nome da busca
+    function getName(){
+        let search = "";
+        if (document.getElementById("nome").value)
+            search='"'+ document.getElementById("nome").value + '"';
+        return search;}
 
-            listaGêneros.forEach((coisa)=>{
-                if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome);}
-            })
+//põe os event listeners do botão e do enter para pesquisar
+    const enter= document.getElementById("nome");
+    const button = document.getElementById("busca");
 
-            listaTags.forEach((coisa)=>{
-                if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome);}
-            })
+    enter.addEventListener('keydown', function(event) {
+        if (event.key==='Enter'){
+            globalPageNumero=1; //atualiza o valor da página a cada nova busca
+            buscar();
+        }})
 
-            listaPlataformas.forEach((coisa)=>{
-                if (coisa.activation==='1'){
-                    filtrosAtivos.push(coisa.nome);}
-            })
-            
-            return filtrosAtivos;}
+    button.addEventListener('click',()=> {
+        globalPageNumero=1; //atualiza o valor da página a cada nova busca
+        buscar();
+    });
+
+//define a url da API
+    function link(){
+        const key= "1175c03391d84eaf9b022713f3c5e618";
+        const search=getName();
+        const page = linkPag();
+        const plataformas= quaisFiltros(listaPlataformas, '&platforms');
+        const tags= quaisFiltros(listaTags, '&tags');
+        const gêneros= quaisFiltros(listaGêneros, '&genres');
+        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${plataformas}${tags}${gêneros}`
+        return url;}
+
+//busca na api 
+    async function buscar(){
         
-    //isso escreve no relatório o número de resultados, o nome da busca e quais filtros estão sendo utilizados
-        function escreveResumo(){
-            const arrayAtivos= resumo();
-            let relatório='';
+        //inicializa o carregando...
+            if(intervalo) {
+                clearInterval(intervalo);}
+            intervalo=loading();
 
-            if(qtdTotalresul>0){
-                if (arrayAtivos.length===0){
-                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()}`}
+        //vai na API
+            try{
+                const response= await fetch(link());
+                const dados= await response.json();
         
-                if (arrayAtivos.length===1){
-                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com o filtro: ${arrayAtivos}`;}
+                qtdTotalresul=dados.count; //quantidade total de resultados
 
-                if (arrayAtivos.length>1){
-                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com os filtros: ${arrayAtivos.join(', ')}`;}
+                updatePag(); //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
+                
+                qtdTotalpag=Math.ceil(qtdTotalresul/20);  //20 jogos por página, logo a quantidade total de páginas a serem exibidas por pesquisa é a divisão arredondada para cima
+                
+                globalGameData=[]; //limpa o q estava antes na variavel global
+                //separa os diferentes atributos de cada jogo
+                    dados.results.forEach((result)=>{
+                        const localGameData={
+                            nome:result.name,
+                            id: result.id,
+                            lancamento:result.released,
+                            avaliacao: result.rating,
+                            imagem: result.background_image,
+                            plataformas: []}
+        
+        
+                        if(result.platforms && result.platforms.length > 0) {
+                            result.platforms.forEach((item)=>{
+                            if(item.platform)
+                                localGameData.plataformas.push(item.platform.name); });
+                        }
 
-        } return relatório;}
+                globalGameData.push(localGameData);}); //pôe os atributos encontrados na função busca dentro da variavel global que vai ser lida depois
+
+                setTimeout(mostrar, 1000); //só pro carregar não ficar tiltando esquisitamente
+                window.scrollTo({ top: 0, behavior: "smooth" }); //volta sempre pro início da página
+
+                //fecha o menu de filtros
+                espaçoFiltro.replaceChildren();
+                espaçoOpçôes.replaceChildren();
+                displayFiltros.textContent=`Filtros >`
+                larguraFiltro.style.flexDirection='row';
+                displayFiltros.style.marginTop='0px'
+                filtrosCriados=false;
+                }
+
+            catch(error){
+                console.log(error);
+                deuRuim();}}
 
 //cria cards para os valores encontrados
     function mostrar() {
@@ -103,6 +151,67 @@
             }
     })
 }
+//cria resumo para usuário sobre sua busca
+    //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
+        function resumo(){
+            let filtrosAtivos=[];
+
+            listaGêneros.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome);}
+            })
+
+            listaTags.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome);}
+            })
+
+            listaPlataformas.forEach((coisa)=>{
+                if (coisa.activation==='1'){
+                    filtrosAtivos.push(coisa.nome);}
+            })
+            return filtrosAtivos;}
+        
+    //isso escreve no relatório o número de resultados, o nome da busca e quais filtros estão sendo utilizados
+        function escreveResumo(){
+            const arrayAtivos= resumo();
+            let relatório='';
+
+            if(qtdTotalresul>0){
+                if (arrayAtivos.length===0){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()}`}
+        
+                if (arrayAtivos.length===1){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com o filtro: ${arrayAtivos}`;}
+
+                if (arrayAtivos.length>1){
+                    relatório= `Há ${qtdTotalresul} resultados para a busca ${getName()} com os filtros: ${arrayAtivos.join(', ')}`;}
+
+        } return relatório;}
+
+//cria a animaçao de "carregando ..."
+    function loading(){
+        let numPontos=0;
+
+        //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
+            return setInterval(()=>{
+                numPontos= (numPontos+1)%4;
+                carregando.textContent='Carregando'+ '.'.repeat(numPontos);
+            },500);}
+
+//interface de erro
+    function deuRuim(){
+        //remove o "carregando ...""
+            clearInterval(intervalo);
+            carregando.textContent='';
+
+        //cria uma interface user-friendly de q houve um erro
+            cardErro=document.createElement("div");
+            cardErro.id='cardErro';
+            cardErro.textContent='❌ Erro ao pesquisar jogo ❌';
+            resultado.replaceChildren;
+            resultado.appendChild(cardErro);}
+
 //paginaçâo
     //Cria o card de paginação
         function cardPag(){
@@ -158,120 +267,6 @@
     //retorna o numero da pagina, util para ser lido depois pela função link e pela função buscar
         function linkPag(){
             return globalPageNumero;}
-
-//põe os event listeners do botão e do enter para pesquisar
-    const enter= document.getElementById("nome");
-    const button = document.getElementById("busca");
-
-    enter.addEventListener('keydown', function(event) {
-        if (event.key==='Enter'){
-            globalPageNumero=1; //atualiza o valor da página a cada nova busca
-            buscar();
-        }})
-
-    button.addEventListener('click',()=> {
-        globalPageNumero=1; //atualiza o valor da página a cada nova busca
-        buscar();
-    });
-
-//pega o nome da busca
-    function getName(){
-        let search = "";
-        if (document.getElementById("nome").value)
-            search=document.getElementById("nome").value;
-        return search;}
-
-//define a url da API
-    function link(){
-        const key= "1175c03391d84eaf9b022713f3c5e618";
-        const search=getName();
-        const page = linkPag();
-        const plataformas= quaisFiltros(listaPlataformas, '&platforms');
-        const tags= quaisFiltros(listaTags, '&tags');
-        const gêneros= quaisFiltros(listaGêneros, '&genres');
-        const url= `https://api.rawg.io/api/games?key=${key}&search=${search}&page=${page}${plataformas}${tags}${gêneros}`
-        
-        return url;}
-
-//cria a animaçao de "carregando ..."
-    function loading(){
-        let numPontos=0;
-
-        //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
-            return setInterval(()=>{
-                numPontos= (numPontos+1)%4;
-                carregando.textContent='Carregando'+ '.'.repeat(numPontos);
-            },500);}
-
-//interface de erro
-    function deuRuim(){
-        //remove o "carregando ...""
-            clearInterval(intervalo);
-            carregando.textContent='';
-
-        //cria uma interface user-friendly de q houve um erro
-            cardErro=document.createElement("div");
-            cardErro.id='cardErro';
-            cardErro.textContent='❌ Erro ao pesquisar jogo ❌';
-            resultado.replaceChildren;
-            resultado.appendChild(cardErro);
-    }
-
-//busca na api 
-    async function buscar(){
-        
-        //inicializa o carregando...
-            if(intervalo) {
-                clearInterval(intervalo);}
-    
-            intervalo=loading();
-
-        //vai na API
-            try{
-                const response= await fetch(link());
-                const dados= await response.json();
-        
-                qtdTotalresul=dados.count; //quantidade total de resultados
-
-                updatePag(); //para que sempre que uma nova busca for feita, o número da pagina volte a ser 1 e seja apresentada a página inicial
-                
-                qtdTotalpag=Math.ceil(qtdTotalresul/20);  //20 jogos por página, logo a quantidade total de páginas a serem exibidas por pesquisa é a divisão arredondada para cima
-                
-                globalGameData=[]; //limpa o q estava antes na variavel global
-                //separa os diferentes atributos de cada jogo
-                    dados.results.forEach((result)=>{
-                        const localGameData={
-                            nome:result.name,
-                            id: result.id,
-                            lancamento:result.released,
-                            avaliacao: result.rating,
-                            imagem: result.background_image,
-                            plataformas: []}
-        
-        
-                        if(result.platforms && result.platforms.length > 0) {
-                            result.platforms.forEach((item)=>{
-                            if(item.platform)
-                                localGameData.plataformas.push(item.platform.name); });
-                        }
-
-                globalGameData.push(localGameData);}); //pôe os atributos encontrados na função busca dentro da variavel global que vai ser lida depois
-
-                setTimeout(mostrar, 1000); //só pro carregar não ficar tiltando esquisitamente
-                window.scrollTo({ top: 0, behavior: "smooth" }); //volta sempre pro início da página
-
-                //fecha o menu de filtros
-                espaçoFiltro.replaceChildren();
-                espaçoOpçôes.replaceChildren();
-                displayFiltros.textContent=`Filtros >`
-                larguraFiltro.style.flexDirection='row';
-                displayFiltros.style.marginTop='0px'
-                filtrosCriados=false;
-                }
-
-            catch(error){
-                console.log(error);
-                deuRuim();}}
 
 //filtro
     //funçôes importantes de filtro
@@ -531,29 +526,12 @@
 
     //funçâo para criar os menus de cada categoria de filtro
         function criaMenu(){
-            let listenerGênero= null;
-            let listenerTag= null;
-            let listenerPlataforma= null;
-
-            if (listenerGênero)
-                botaoGenero.removeEventListener('click', criaGêneros);
-
-            if (listenerTag)
-                botaoTag.removeEventListener('click', criaTags);
-
-            if(listenerPlataforma)
-                botaoPlataforma.removeEventListener('click', criaPlataformas);
-
-            listenerGênero=criaGêneros();
-            listenerTag=criaTags();
-            listenerPlataforma=criaPlataformas();
-
             botaoGenero.addEventListener('click', criaGêneros);
             botaoPlataforma.addEventListener('click', criaPlataformas);
             botaoTag.addEventListener('click', criaTags);
             } criaMenu();
         
-    //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados e fechar o menu feio de filtros
+    //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
         botaoAplicar.addEventListener('click', buscar);
 
     //quando a pessoa clicar em limpar, tem que remover todos os filtros ativos
