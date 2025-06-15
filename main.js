@@ -34,7 +34,7 @@
     function link(){
         const key= "1175c03391d84eaf9b022713f3c5e618";
         const search=getName();
-        const page = linkPag();
+        const page = globalPageNumero;
         const plataformas= quaisFiltros(listaPlataformas, '&platforms');
         const tags= quaisFiltros(listaTags, '&tags');
         const gêneros= quaisFiltros(listaGêneros, '&genres');
@@ -84,12 +84,7 @@
                 window.scrollTo({ top: 0, behavior: "smooth" }); //volta sempre pro início da página
 
                 //fecha o menu de filtros
-                espaçoFiltro.replaceChildren();
-                espaçoOpçôes.replaceChildren();
-                displayFiltros.textContent=`Filtros >`
-                larguraFiltro.style.flexDirection='row';
-                displayFiltros.style.marginTop='0px'
-                filtrosCriados=false;
+                fechaFiltros();
                 }
 
             catch(error){
@@ -151,6 +146,7 @@
             }
     })
 }
+
 //cria resumo para usuário sobre sua busca
     //lê cada array dos filtros e busca quais estâo ativados, caso estejam, coloca no array filtroAtivos
         function resumo(){
@@ -263,10 +259,6 @@
             if(valor){
                 valor.textContent=globalPageNumero;}
         }
-
-    //retorna o numero da pagina, util para ser lido depois pela função link e pela função buscar
-        function linkPag(){
-            return globalPageNumero;}
 
 //filtro
     //funçôes importantes de filtro
@@ -433,7 +425,7 @@
                 {nome: 'Shooter', APIvalue:'shooter', activation: '0'}]
             
         //abre e fecha o menu de opçoes de gênero
-            function criaGêneros(){
+            botaoGenero.addEventListener('click', ()=>{
                 generosCriados=!generosCriados;
 
                 if (generosCriados){
@@ -447,7 +439,7 @@
                 if (!generosCriados){
                     botaoGenero.textContent=`Gêneros >`
                     lugarDosGêneros.replaceChildren();
-                    botaoGeneroDiv.removeChild(lugarDosGêneros); }};   
+                    botaoGeneroDiv.removeChild(lugarDosGêneros); }});   
 
     //filtro de tags
         let tagsCriadas=false; //controle de se as tags estâo abertas ou não
@@ -462,7 +454,7 @@
             {nome: 'MultiPlayer', APIvalue:'multiplayer', activation:'0'}]
 
         //abre e fecha o menu de opçoes de tag
-            function criaTags(){
+            botaoTag.addEventListener('click',()=>{
                 tagsCriadas=!tagsCriadas;
 
                 if (tagsCriadas){
@@ -477,7 +469,7 @@
                     botaoTag.textContent=`Tags >`
                     lugarDasTags.replaceChildren();
                     botaoTagDiv.removeChild(lugarDasTags); }
-            };
+            });
     
     //filtro de plataformas
         let plataformasCriados=false; //controle de se as plataformas estâo abertas ou nâo
@@ -506,7 +498,7 @@
             
             
         //abre e fecha o menu de opçoes de plataformas
-            function criaPlataformas(){
+            botaoPlataforma.addEventListener('click', ()=>{
                 plataformasCriados=!plataformasCriados;
 
                 if (plataformasCriados){
@@ -522,23 +514,48 @@
                     botaoPlataforma.textContent=`Disponível para >`
                     lugarDasPlataformas.replaceChildren();
                     botaoPlataformaDiv.removeChild(lugarDasPlataformas); }
-                };
+                });
+    
+    //função de fazer todos os menusu de filtros se fecharem quando a pessoa buscar
+        function fechaFiltros(){
+            //para o menu principal de filtros
+                filtrosCriados=false;
+                displayFiltros.textContent=`Filtros >`
+                larguraFiltro.style.flexDirection='row';
+                displayFiltros.style.marginTop='0px'
+                espaçoFiltro.replaceChildren();
+                espaçoOpçôes.replaceChildren();
 
-    //criar os menus de cada categoria de filtro
-        botaoGenero.addEventListener('click', criaGêneros);
-        botaoPlataforma.addEventListener('click', criaPlataformas);
-        botaoTag.addEventListener('click', criaTags);
-        
+            //para o menu de gêneros
+                generosCriados=false;
+                botaoGenero.textContent=`Gêneros >`;
+                lugarDosGêneros.replaceChildren();
+                botaoGeneroDiv.removeChild(lugarDosGêneros);
+
+            //para o menu de tags
+                tagsCriadas=false;
+                botaoTag.textContent=`Tags >`;
+                lugarDasTags.replaceChildren();
+                botaoTagDiv.removeChild(lugarDasTags);
+            
+            //para o menu de plataformas
+                plataformasCriados=false;
+                botaoPlataforma.textContent=`Disponível para >`;
+                lugarDasPlataformas.replaceChildren();
+                botaoPlataformaDiv.removeChild(lugarDasPlataformas);
+
+        }
+
     //quando a pessoa clicar em aplicar, tem que fazer uma busca usando os novos filtros aplicados
         botaoAplicar.addEventListener('click', buscar);
 
     //quando a pessoa clicar em limpar, tem que remover todos os filtros ativos
         botaoLimpar.addEventListener('click', ()=>{
             const cor=document.querySelectorAll('.botbot');
-
             cor.forEach((coisa)=>{
-                coisa.style.backgroundColor= 'rgb(178, 191, 215)';
-            });        
+                coisa.style.backgroundColor= 'rgb(178, 191, 215)';}
+            );       
+
             limpaFiltros(listaGêneros);
             limpaFiltros(listaTags);
             limpaFiltros(listaPlataformas);
