@@ -1,6 +1,5 @@
 //algumas variaveis globais e divs MUITO importantes
     const resultado= document.getElementById("resultado");
-    const carregando= document.getElementById("carregando");
     let globalGameData= [];
     let globalPageNumero=1;
     let paginacaoCriada=false;
@@ -45,9 +44,7 @@
     async function buscar(){
         
         //inicializa o carregando...
-            if(intervalo) {
-                clearInterval(intervalo);}
-            intervalo=loading();
+            intervalo=loading('1', intervalo);
 
         //vai na API
             try{
@@ -95,8 +92,7 @@
     function mostrar() {
         resultado.innerHTML=""; //limpa os resultados anteriores quando fazemos uma nova busca
 
-        clearInterval(intervalo);
-        carregando.textContent='';
+        intervalo=loading('0', intervalo);
 
         const relatório=document.getElementById("relatório");
         relatório.textContent=escreveResumo();
@@ -186,20 +182,31 @@
         } return relatório;}
 
 //cria a animaçao de "carregando ..."
-    function loading(){
-        let numPontos=0;
+    function loading(ligaDesliga, intervalo){
+        const carregando= document.getElementById("carregando");
+        
+            carregando.replaceChildren();
+            clearInterval(intervalo);
 
-        //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
-            return setInterval(()=>{
-                numPontos= (numPontos+1)%4;
-                carregando.textContent='Carregando'+ '.'.repeat(numPontos);
-            },500);}
+        if(ligaDesliga==='1'){ //se for 1, é pra ligar
+            let numPontos=0;
+            const carregandoTexto= document.createElement("p");
+            carregandoTexto.id='carregandoTexto';
+            carregando.appendChild(carregandoTexto);
+
+            //a cada 500ms, vai ser acresecentado um ponto final no "caregando"
+                return setInterval(()=>{
+                    numPontos= (numPontos+1)%4;
+                    carregandoTexto.textContent='Carregando'+ '.'.repeat(numPontos);
+                },500)};
+        
+        return null;
+            }
 
 //interface de erro
     function deuRuim(){
         //remove o "carregando ...""
-            clearInterval(intervalo);
-            carregando.textContent='';
+            intervalo=loading('0', intervalo);
 
         //cria uma interface user-friendly de q houve um erro
             cardErro=document.createElement("div");
@@ -530,19 +537,22 @@
                 generosCriados=false;
                 botaoGenero.textContent=`Gêneros >`;
                 lugarDosGêneros.replaceChildren();
-                botaoGeneroDiv.removeChild(lugarDosGêneros);
+                if (botaoGeneroDiv.contains(lugarDosGêneros))
+                    botaoGeneroDiv.removeChild(lugarDosGêneros);
 
             //para o menu de tags
                 tagsCriadas=false;
                 botaoTag.textContent=`Tags >`;
                 lugarDasTags.replaceChildren();
-                botaoTagDiv.removeChild(lugarDasTags);
+                if (botaoTagDiv.contains(lugarDasTags))
+                    botaoTagDiv.removeChild(lugarDasTags);
             
             //para o menu de plataformas
                 plataformasCriados=false;
                 botaoPlataforma.textContent=`Disponível para >`;
                 lugarDasPlataformas.replaceChildren();
-                botaoPlataformaDiv.removeChild(lugarDasPlataformas);
+                if (botaoPlataformaDiv.contains(lugarDasPlataformas))
+                    botaoPlataformaDiv.removeChild(lugarDasPlataformas);
 
         }
 

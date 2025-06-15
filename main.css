@@ -49,6 +49,9 @@ align-items: center;
 
 #carregando{
     justify-content: center;
+}
+
+#carregandoTexto{
     color: black;
     font-size: 30px;
 }
