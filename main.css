@@ -221,6 +221,12 @@ h2{
 }
 
 .botbot{
+    min-height: 35px;
+    padding: 5px 10px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    white-space: normal; /* quebrar a linha se necessário */
     background-color: rgb(178, 191, 215);
     border: 2px solid rgb(58, 74, 105);
     border-radius: 8px;
@@ -285,4 +291,25 @@ h2{
     #carregandoTexto{
         font-size: 22px;
     }
+
+    #lugarDosFiltros {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+   }
+
+   #tagDiv, #generoDiv, #plataformaDiv {
+    width: 90%;
+   }
+
+   #lugarDasOpçôes {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+   }
+
+   #aplicar, #limpar {
+    width: 90%;
+    margin-left: 0;
+   }
 }
