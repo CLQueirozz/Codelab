@@ -1,10 +1,16 @@
-# 🎮 Buscador de Jogos
+# 🎮 Buscador de Jogos | Game Search App
+
+> 🇧🇷 Versão em português abaixo | English version below 🇺🇸
+
+---
+
+## 🇧🇷 Descrição
 
 Projeto desenvolvido para o processo seletivo do grupo de extensão **Codelab**.
 
-Este projeto consiste em uma aplicação web que permite buscar jogos utilizando a [RAWG API](https://rawg.io/apidocs), com diversos filtros dinâmicos por gênero, plataforma e tags. Os resultados incluem imagem, avaliação, data de lançamento e plataformas disponíveis.
+Esta aplicação web permite buscar jogos utilizando a [RAWG API](https://rawg.io/apidocs), com diversos filtros dinâmicos por gênero, plataforma e tags. Os resultados exibem imagem, avaliação, data de lançamento e plataformas disponíveis.
 
-## 🧠 Funcionalidades
+### 🧠 Funcionalidades
 
 - Busca de jogos por nome
 - Paginação dos resultados
@@ -15,14 +21,14 @@ Este projeto consiste em uma aplicação web que permite buscar jogos utilizando
 - Cards com imagem, avaliação, nome, data de lançamento e plataformas
 - Interface amigável e responsiva
 
-## 💻 Tecnologias Utilizadas
+### 💻 Tecnologias Utilizadas
 
 - **HTML5**
 - **CSS3**
-- **JavaScript (Vanilla)** — sem frameworks
+- **JavaScript (puro)**
 - **RAWG Video Games Database API**
 
-## 📁 Estrutura do Projeto
+### 📁 Estrutura do Projeto
 
 ```
 .
@@ -31,14 +37,41 @@ Este projeto consiste em uma aplicação web que permite buscar jogos utilizando
 └── main.js           # Lógica e consumo da API
 ```
 
-## 🧪 Demonstração (opcional)
-Inclua aqui um GIF ou captura de tela do projeto funcionando, se desejar.
+---
 
-## 📌 Observações
+## 🇺🇸 Description
 
-- Projeto focado em **práticas de DOM**, **consumo de API REST** e **interatividade dinâmica com filtros personalizados**.
-- Desenvolvido com foco em **organização, clareza e usabilidade**.
+This project was developed for the selection process of the **Codelab** extension group.
+
+It is a web application that allows users to search for games using the [RAWG API](https://rawg.io/apidocs), with dynamic filters for genre, platform, and tags. The results include the game image, rating, release date, and supported platforms.
+
+### 🧠 Features
+
+- Search for games by name
+- Paginated results
+- Dynamic filters by:
+  - Genre (Action, Adventure, Puzzle, etc.)
+  - Tags (Singleplayer, Multiplayer)
+  - Platforms (PC, PS5, Nintendo Switch, etc.)
+- Cards with image, rating, title, release date, and platforms
+- Responsive and user-friendly interface
+
+### 💻 Technologies Used
+
+- **HTML5**
+- **CSS3**
+- **Vanilla JavaScript**
+- **RAWG Video Games Database API**
+
+### 📁 Project Structure
+
+```
+.
+├── main.html         # Page structure
+├── main.css          # Interface styling
+└── main.js           # Logic and API consumption
+```
 
 ---
 
-Desenvolvido por [@BrunoZuffo](https://github.com/BrunoZuffo) e [@CLQueirozz](https://github.com/CLQueirozz)
+👨‍💻 Developed by [@BrunoZuffo](https://github.com/BrunoZuffo) and [@CLQueirozz](https://github.com/CLQueirozz)
