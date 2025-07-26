@@ -1,45 +1,6 @@
-# 🎮 Buscador de Jogos | Game Search App
+# 🎮 Game Search App
 
-> 🇧🇷 Versão em português abaixo | English version below 🇺🇸
-
----
-
-## 🇧🇷 Descrição
-
-Projeto desenvolvido para o processo seletivo do grupo de extensão **Codelab**.
-
-Esta aplicação web permite buscar jogos utilizando a [RAWG API](https://rawg.io/apidocs), com diversos filtros dinâmicos por gênero, plataforma e tags. Os resultados exibem imagem, avaliação, data de lançamento e plataformas disponíveis.
-
-### 🧠 Funcionalidades
-
-- Busca de jogos por nome
-- Paginação dos resultados
-- Filtros dinâmicos por:
-  - Gênero (Ação, Aventura, Puzzle, etc.)
-  - Tags (Singleplayer, Multiplayer)
-  - Plataformas (PC, PS5, Nintendo Switch, etc.)
-- Cards com imagem, avaliação, nome, data de lançamento e plataformas
-- Interface amigável e responsiva
-
-### 💻 Tecnologias Utilizadas
-
-- **HTML5**
-- **CSS3**
-- **JavaScript (puro)**
-- **RAWG Video Games Database API**
-
-### 📁 Estrutura do Projeto
-
-```
-.
-├── main.html         # Estrutura da página
-├── main.css          # Estilização da interface
-└── main.js           # Lógica e consumo da API
-```
-
----
-
-## 🇺🇸 Description
+## Description
 
 This project was developed for the selection process of the **Codelab** extension group.
 
